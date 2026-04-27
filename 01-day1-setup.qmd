@@ -31,8 +31,8 @@ Two pieces of software, in this order.
 
 **R itself** is the language and the engine. Download
 from <https://cran.r-project.org/> and run the installer
-for your operating system. The version as of writing is
-4.4.x; any 4.x release is fine.
+for your operating system. R 4.5+ is current as of
+writing; any 4.x release is fine for this book.
 
 **RStudio** is the integrated development environment
 (IDE). It is the application you actually open every day;
@@ -314,8 +314,10 @@ checking the solution.
    (e) The maximum minus the minimum of `c(11, 4, 19, 7,
        2)`.
 
-3. **Debug three broken expressions.** For each, explain
-   what is wrong and rewrite to fix it.
+3. **Inspect three suspicious expressions.** For each,
+   run it in R and explain what happens. If it errors,
+   explain why; if it runs, explain whether the result
+   is what a careful R user would write.
    (a) `mean(c(1, 2, 3, "4"))`
    (b) `c(1, 2, 3) + c(10, 20)`
    (c) `x = 5; x ** 2`
@@ -388,9 +390,12 @@ c(1, 2, 3) + c(10, 20, 30)
 ```
 
 (c) `x = 5; x ** 2`. The `=` is allowed for assignment
-but the convention in R is `<-`; `**` is not the
-exponentiation operator in R (it is in some other
-languages). Fix:
+but the convention in R is `<-`. R's parser actually
+silently rewrites `**` to `^` (see `?Arithmetic`), so
+this expression returns 25. The expression is not
+strictly broken, but `**` is not idiomatic in R and
+relies on a parser quirk that is easy to forget; prefer
+`^` explicitly:
 
 ```r
 x <- 5

@@ -69,8 +69,10 @@ patients <- read_csv("data/patients.csv")
 
 `read_csv()` returns a **tibble** — a modern data frame.
 It prints nicely (only the first 10 rows; columns flagged
-by type), and it does not silently convert characters to
-factors the way base R's `read.csv()` did historically.
+by type), and it does not convert characters to factors.
+(Base R's `read.csv()` had `stringsAsFactors = TRUE` as
+its default until R 4.0.0 in 2020; the modern default is
+`FALSE`, but the tibble convention is still cleaner.)
 
 Excel files:
 

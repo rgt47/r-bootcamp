@@ -99,8 +99,11 @@ ggplot(daily_admits, aes(x = date, y = n_admissions)) +
   geom_line()
 ```
 
-**`geom_smooth`** adds a smoother (LOESS by default; use
-`method = "lm"` for a linear fit):
+**`geom_smooth`** adds a smoother. The default method
+depends on sample size: LOESS for n < 1000, `gam` (a
+generalised additive model) for larger samples. Use
+`method = "lm"` for a linear fit, or specify any other
+method explicitly:
 
 ```r
 ggplot(cohort, aes(x = age, y = sbp)) +
