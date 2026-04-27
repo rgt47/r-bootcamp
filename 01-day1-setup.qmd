@@ -17,46 +17,424 @@ By the end of this day you should be able to:
 
 ## Lecture
 
-(TODO: ~1 hour of lecture content covering:)
+R is a programming language built specifically for
+statistical computing. You will spend the next few years
+of your graduate career running R in some form every day.
+This first hour gets you to the point where R is
+installed, you can type expressions and have them
+evaluated, and you understand what R is doing with the
+characters you type.
 
-- Installation and first launch
-- Console vs. script vs. RStudio
-- Vectors and arithmetic
-- Data types and coercion
-- Indexing
-- NA and friends
+### Installing R and RStudio
+
+Two pieces of software, in this order.
+
+**R itself** is the language and the engine. Download
+from <https://cran.r-project.org/> and run the installer
+for your operating system. The version as of writing is
+4.4.x; any 4.x release is fine.
+
+**RStudio** is the integrated development environment
+(IDE). It is the application you actually open every day;
+it talks to R behind the scenes. Download from
+<https://posit.co/download/rstudio-desktop/> and install.
+
+When you open RStudio for the first time you see four
+panes:
+
+- **Source** (top-left): your code, saved in `.R` files.
+- **Console** (bottom-left): the live R session.
+- **Environment / History** (top-right): the objects you
+  have created, and a log of recent commands.
+- **Files / Plots / Help / Packages** (bottom-right):
+  filesystem, figures you have produced, help pages,
+  installed packages.
+
+You will use the source pane (writing scripts) and the
+console pane (running them) most of the time.
+
+### The console: arithmetic and assignment
+
+Click in the **Console** pane (bottom-left). You see a
+prompt (`>`). Type:
+
+```r
+2 + 2
+#> [1] 4
+```
+
+R evaluated `2 + 2` and printed `4`. The `[1]` means 'the
+first element of the result is printed here' — which
+matters when results have many elements.
+
+The arithmetic operators are what you expect: `+`, `-`,
+`*`, `/`, `^` for exponentiation, `%%` for modulo
+(remainder).
+
+```r
+17 %% 5
+#> [1] 2
+```
+
+To save a value for later, **assign** it to a name. The
+R convention is to use `<-` (left-arrow):
+
+```r
+x <- 17
+x
+#> [1] 17
+x * 2
+#> [1] 34
+```
+
+Names can use letters, digits, dot, and underscore, but
+must start with a letter or dot. The convention in modern
+R is `snake_case`:
+
+```r
+patient_age <- 47
+mean_blood_pressure <- 128.5
+```
+
+### Vectors
+
+The fundamental data structure in R is the **vector**: an
+ordered collection of values of the same type. Create one
+with `c()` (combine):
+
+```r
+ages <- c(24, 47, 31, 62, 19, 55)
+ages
+#> [1] 24 47 31 62 19 55
+length(ages)
+#> [1] 6
+```
+
+Arithmetic on a vector applies element-wise:
+
+```r
+ages_in_months <- ages * 12
+ages_in_months
+#> [1] 288 564 372 744 228 660
+```
+
+Many R functions take a vector and return either a vector
+of the same length or a single summary value:
+
+```r
+mean(ages)
+#> [1] 39.66667
+sd(ages)
+#> [1] 17.36856
+range(ages)
+#> [1] 19 62
+```
+
+This vectorised behaviour is the single most important
+idiom in R. You almost never write loops to apply an
+operation element-by-element; R does it for you.
+
+### Data types
+
+Every value in R has a **type**. The five you will meet
+this week:
+
+```r
+typeof(42L)         # integer (note the L)
+#> [1] "integer"
+typeof(3.14)        # double-precision floating-point
+#> [1] "double"
+typeof("hello")     # character (string)
+#> [1] "character"
+typeof(TRUE)        # logical (boolean)
+#> [1] "logical"
+typeof(factor(c("low", "high")))   # factor
+#> [1] "integer"
+```
+
+A **factor** is R's way of representing a categorical
+variable. Internally it is an integer with a labelling.
+You will encounter factors immediately when reading data;
+treat them as categorical for now.
+
+R coerces between types automatically when it can:
+
+```r
+TRUE + 1
+#> [1] 2          # TRUE is treated as 1
+"5" + 1
+#> Error: non-numeric argument to binary operator
+as.numeric("5") + 1
+#> [1] 6
+```
+
+Coercion is the source of many beginner bugs. When in
+doubt, check the type with `typeof()` or `class()`.
+
+### Indexing vectors
+
+Three ways to extract elements from a vector.
+
+**By position** (integer index, starting at 1):
+
+```r
+ages <- c(24, 47, 31, 62, 19, 55)
+ages[1]
+#> [1] 24
+ages[c(1, 3, 5)]
+#> [1] 24 31 19
+ages[-1]               # all but the first
+#> [1] 47 31 62 19 55
+```
+
+**By logical** (a vector of `TRUE`/`FALSE` of the same
+length):
+
+```r
+adults <- ages >= 18
+adults
+#> [1] TRUE TRUE TRUE TRUE TRUE TRUE
+ages[ages >= 50]
+#> [1] 62 55
+```
+
+**By name** (when the vector has names):
+
+```r
+biomarkers <- c(hba1c = 7.2, ldl = 145, sbp = 132)
+biomarkers["ldl"]
+#> ldl
+#> 145
+```
+
+Logical indexing is the workhorse of data manipulation in
+R. Read it as 'keep the elements where the condition is
+TRUE'.
+
+### Missing values
+
+Real biomedical data has missing values. R represents
+them as `NA` (Not Available):
+
+```r
+labs <- c(7.2, NA, 6.8, 8.1, NA)
+labs
+#> [1] 7.2  NA 6.8 8.1  NA
+mean(labs)
+#> [1] NA
+mean(labs, na.rm = TRUE)
+#> [1] 7.366667
+```
+
+`mean()` returns `NA` by default when any input is `NA`.
+Adding `na.rm = TRUE` removes the missing values before
+computing. Most R functions follow this convention; it is
+deliberate, to force you to think about how you want to
+handle the missingness rather than silently ignoring it.
+
+Test for missingness with `is.na()`:
+
+```r
+is.na(labs)
+#> [1] FALSE  TRUE FALSE FALSE  TRUE
+labs[!is.na(labs)]
+#> [1] 7.2 6.8 8.1
+```
+
+Do **not** test for `NA` with `==`:
+
+```r
+labs == NA
+#> [1]  NA  NA  NA  NA  NA
+```
+
+`NA == NA` is `NA` (because the result of comparing an
+unknown to an unknown is itself unknown).
 
 ## Worked example: a small biomedical dataset
 
-(TODO: A short worked example, e.g., compute summary
-statistics on a vector of patient ages, demonstrating
-the day's content end to end.)
+You see ten patients in a clinic. Their ages and systolic
+blood pressures (SBP) are recorded.
+
+```r
+patient_id <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+ages       <- c(34, 67, 52, 41, 58, 23, 71, 49, NA, 38)
+sbp        <- c(122, 148, 135, 128, 142, 118, 156, 130,
+                139, 124)
+```
+
+Sample size, mean age (handling the missing), proportion
+hypertensive (SBP >= 140):
+
+```r
+length(patient_id)
+#> [1] 10
+mean(ages, na.rm = TRUE)
+#> [1] 48.11111
+mean(sbp >= 140)
+#> [1] 0.3
+```
+
+Identify the hypertensive patients and report their IDs
+and ages:
+
+```r
+hypertensive <- sbp >= 140
+hypertensive
+#>  [1] FALSE  TRUE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE FALSE
+patient_id[hypertensive]
+#> [1] 2 5 7
+ages[hypertensive]
+#> [1] 67 58 71
+```
+
+In three lines you have done what an analyst might
+otherwise do by hand: counted the cohort, computed
+summary statistics with explicit missing-data handling,
+and identified the subset of clinical interest. This is
+the core rhythm of R for biostatistics.
 
 ## Homework
 
-1. (TODO) Reproduce the worked example on your own
-   machine.
-2. (TODO) Write 5 small R expressions that compute the
-   answers to specified arithmetic questions.
-3. (TODO) Debug 3 broken R expressions; explain what
-   was wrong and fix it.
-4. (TODO) Create a vector of patient ages, index out
-   the children (under 18), the working-age adults
-   (18-65), and the seniors (65+). Compute the mean
-   age in each group.
-5. (TODO) Given a vector with NA values, compute the
-   mean both with and without removing the NA.
-   Describe what `mean()` does by default.
+Each problem is solvable with what was covered in the
+lecture. Attempt each one in your R session before
+checking the solution.
+
+1. **Reproduce.** In your R session, type all of the
+   examples from the 'Worked example' section. Confirm
+   you get the same output.
+
+2. **Five small expressions.** Write R expressions that
+   compute each of these:
+   (a) The cube root of 27.
+   (b) The remainder when 1000 is divided by 7.
+   (c) The mean of the integers 1 through 100.
+   (d) The number of values in `c(2, 4, 6, 8, 10)` that
+       are greater than 5.
+   (e) The maximum minus the minimum of `c(11, 4, 19, 7,
+       2)`.
+
+3. **Debug three broken expressions.** For each, explain
+   what is wrong and rewrite to fix it.
+   (a) `mean(c(1, 2, 3, "4"))`
+   (b) `c(1, 2, 3) + c(10, 20)`
+   (c) `x = 5; x ** 2`
+
+4. **Index by group.** Given
+   `ages <- c(8, 22, 47, 65, 13, 51, 73, 29, 17, 55)`,
+   compute the mean age in three groups: children
+   (under 18), working-age adults (18-64 inclusive),
+   seniors (65+). Use logical indexing.
+
+5. **Missing values.** Given
+   `labs <- c(7.2, NA, 6.8, 8.1, NA, 5.9, 7.4, NA)`:
+   (a) How many values are missing?
+   (b) What is the mean of the non-missing values?
+   (c) Replace each `NA` with the mean of the
+       non-missing values, producing a vector of length
+       8 with no `NA`s.
 
 ## Solutions
 
-(TODO: Worked solutions to all homework problems. The
-student should attempt each problem before reading the
-solution.)
+**Problem 1.** Each line in the worked example should
+produce the output shown. If yours differs, common
+causes are: typo (check parentheses and commas), wrong
+type (e.g., quotes around numbers), or a left-over object
+from earlier in the session. Restart R if the session is
+in a strange state.
+
+**Problem 2.**
+
+```r
+# (a)
+27 ^ (1/3)
+#> [1] 3
+# (b)
+1000 %% 7
+#> [1] 6
+# (c)
+mean(1:100)
+#> [1] 50.5
+# (d)
+sum(c(2, 4, 6, 8, 10) > 5)
+#> [1] 3
+# (e)
+max(c(11, 4, 19, 7, 2)) - min(c(11, 4, 19, 7, 2))
+#> [1] 17
+# (or, more cleanly:)
+diff(range(c(11, 4, 19, 7, 2)))
+#> [1] 17
+```
+
+**Problem 3.**
+
+(a) `mean(c(1, 2, 3, "4"))`. The `"4"` (in quotes) is a
+character; `c()` coerces the whole vector to character
+because mixed types must collapse to one type. `mean()`
+on a character vector errors. Fix:
+
+```r
+mean(c(1, 2, 3, 4))
+#> [1] 2.5
+```
+
+(b) `c(1, 2, 3) + c(10, 20)`. R recycles the shorter
+vector, but lengths that do not divide evenly produce a
+warning. Fix to matching lengths:
+
+```r
+c(1, 2, 3) + c(10, 20, 30)
+#> [1] 11 22 33
+```
+
+(c) `x = 5; x ** 2`. The `=` is allowed for assignment
+but the convention in R is `<-`; `**` is not the
+exponentiation operator in R (it is in some other
+languages). Fix:
+
+```r
+x <- 5
+x ^ 2
+#> [1] 25
+```
+
+**Problem 4.**
+
+```r
+ages <- c(8, 22, 47, 65, 13, 51, 73, 29, 17, 55)
+mean(ages[ages < 18])           # children
+#> [1] 12.66667
+mean(ages[ages >= 18 & ages < 65])   # working-age
+#> [1] 40.8
+mean(ages[ages >= 65])          # seniors
+#> [1] 69
+```
+
+**Problem 5.**
+
+```r
+labs <- c(7.2, NA, 6.8, 8.1, NA, 5.9, 7.4, NA)
+# (a)
+sum(is.na(labs))
+#> [1] 3
+# (b)
+mean(labs, na.rm = TRUE)
+#> [1] 7.08
+# (c)
+labs[is.na(labs)] <- mean(labs, na.rm = TRUE)
+labs
+#> [1] 7.20 7.08 6.80 8.10 7.08 5.90 7.40 7.08
+```
+
+Note: imputing missing values with the mean is sometimes
+acceptable for exploratory work but can bias inferences
+in a real analysis. Day 4 introduces statistical tests;
+the *Practicum* and *Applied Methods* volumes treat
+missing-data handling at the level you will need for
+publishable work.
 
 ## What's next
 
-Day 2 covers data import and manipulation: how to load
-a real dataset and use the `dplyr` verbs to wrangle it
-into shape. Bring your laptop with R and RStudio
-installed.
+Day 2 covers reading real data into R and manipulating it
+with the `dplyr` verbs. Bring your laptop with R and
+RStudio installed and tested.

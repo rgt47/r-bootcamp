@@ -11,49 +11,397 @@ By the end of this day you should be able to:
   `geom_boxplot`).
 - Customise scales, labels, and themes.
 - Use `facet_wrap` to produce small multiples.
-- Save figures as PNG and PDF at appropriate dimensions.
+- Save figures as PNG and PDF at appropriate dimensions
+  and resolution.
 
 ## Lecture
 
-(TODO: ~1 hour of lecture content covering:)
+`ggplot2` is the standard graphics package for the R
+ecosystem. It is built on the **grammar of graphics**: a
+deliberate vocabulary that lets you compose any figure
+from a small number of orthogonal pieces. Once you know
+the grammar, every plot is a recombination.
 
-- The grammar of graphics in one paragraph
-- `ggplot(data, aes(...))` + geoms
-- The most common geoms
-- Scales: continuous, discrete, log, colour
-- Labels and themes
-- Facets
-- Saving with `ggsave()`
+### The grammar in one paragraph
+
+A `ggplot2` figure has three required pieces and several
+optional ones:
+
+- **data**: a tibble or data frame.
+- **aesthetic mapping**: which columns map to which
+  visual channels (x, y, colour, shape, size).
+- **geom**: the geometric form (point, line, bar,
+  histogram, boxplot).
+
+Plus optional:
+
+- **scales**: how aesthetic values map to visual values
+  (continuous to log, categorical to a colour palette).
+- **facets**: a small-multiples grid by some categorical
+  variable.
+- **theme**: non-data ink (axes, grid, fonts).
+
+A minimal plot:
+
+```r
+library(tidyverse)
+
+ggplot(cohort, aes(x = age, y = sbp)) +
+  geom_point()
+```
+
+Read it as: 'Take the `cohort` tibble, map `age` to the
+x-axis and `sbp` to the y-axis, and draw points.' Each
+new layer is added with `+`.
+
+### Common geoms
+
+**`geom_point`** for scatter:
+
+```r
+ggplot(cohort, aes(x = age, y = sbp, colour = sex)) +
+  geom_point(alpha = 0.5)
+```
+
+`alpha = 0.5` makes points semi-transparent, helpful for
+overplotting.
+
+**`geom_histogram`** for the distribution of one
+continuous variable:
+
+```r
+ggplot(cohort, aes(x = bmi)) +
+  geom_histogram(binwidth = 1)
+```
+
+`binwidth` controls bin width in data units. The default
+is sometimes too coarse or too fine; iterate.
+
+**`geom_boxplot`** for distributions across categories:
+
+```r
+ggplot(cohort, aes(x = age_group, y = sbp)) +
+  geom_boxplot()
+```
+
+**`geom_bar`** for counts:
+
+```r
+ggplot(cohort, aes(x = race)) +
+  geom_bar()
+```
+
+**`geom_line`** for time series or any x-y where x is
+ordered:
+
+```r
+ggplot(daily_admits, aes(x = date, y = n_admissions)) +
+  geom_line()
+```
+
+**`geom_smooth`** adds a smoother (LOESS by default; use
+`method = "lm"` for a linear fit):
+
+```r
+ggplot(cohort, aes(x = age, y = sbp)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(method = "lm")
+```
+
+Layers compose. The points and the line above are drawn
+on top of one another in the order they are added.
+
+### Aesthetic mapping vs. fixed values
+
+Inside `aes()`: column → visual channel. Outside `aes()`:
+a fixed value applied to every observation.
+
+```r
+# Wrong (alpha is data-driven; it is not a column)
+ggplot(cohort, aes(x = age, y = sbp, alpha = 0.5)) +
+  geom_point()
+
+# Right (alpha is a fixed value)
+ggplot(cohort, aes(x = age, y = sbp)) +
+  geom_point(alpha = 0.5)
+
+# Right (colour mapped to the sex column)
+ggplot(cohort, aes(x = age, y = sbp, colour = sex)) +
+  geom_point()
+```
+
+When you see strange figures (a single hue ramp where
+you expected discrete colours, an alpha legend you did
+not ask for), it is usually `aes()`-vs.-not confusion.
+
+### Scales
+
+Continuous scales:
+
+```r
+ggplot(cohort, aes(x = bmi, y = fasting_glucose)) +
+  geom_point() +
+  scale_y_log10()                       # log y axis
+```
+
+For colour:
+
+```r
+ggplot(cohort, aes(x = age, y = sbp, colour = bmi)) +
+  geom_point() +
+  scale_colour_viridis_c()              # continuous viridis
+```
+
+For categorical colour, the default is fine for a few
+levels; for more, `scale_colour_brewer()` and
+`scale_colour_manual()` give control.
+
+### Labels and themes
+
+```r
+ggplot(cohort, aes(x = age, y = sbp, colour = sex)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm") +
+  labs(title = "Systolic blood pressure rises with age",
+       subtitle = "NHANES-style synthetic cohort, n = 500",
+       x = "Age (years)",
+       y = "Systolic blood pressure (mmHg)",
+       colour = "Sex",
+       caption = "Source: synthetic data") +
+  theme_minimal(base_size = 12)
+```
+
+`theme_minimal()` strips the default grey background.
+Other themes: `theme_bw()`, `theme_classic()`,
+`theme_void()`. The `base_size` sets the default font
+size.
+
+### Facets
+
+Small multiples are the right way to compare a relationship
+across groups:
+
+```r
+ggplot(cohort, aes(x = age, y = sbp)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(method = "lm") +
+  facet_wrap(~ sex)
+```
+
+`facet_wrap(~ var)` makes one panel per level of `var`
+arranged in a grid. `facet_grid(rows ~ cols)` makes a
+two-way grid.
+
+### Saving figures
+
+```r
+p <- ggplot(cohort, aes(x = age, y = sbp)) +
+  geom_point() + geom_smooth()
+
+ggsave("figures/sbp-by-age.png", p, width = 6, height = 4,
+       dpi = 300)
+ggsave("figures/sbp-by-age.pdf", p, width = 6, height = 4)
+```
+
+PNG for screen and most slides; PDF for print and
+publication. The `dpi = 300` for PNG keeps the figure
+crisp at print size; PDF is vector and has no dpi.
+
+::: {.callout-note}
+A figure for a journal article typically wants a
+specific width (often 3.5 inches single-column or 7
+inches two-column). Match the journal's specification at
+save time so the figure does not need rescaling.
+:::
 
 ## Worked example: figures from yesterday's analysis
 
-(TODO: Produce three figures from yesterday's wrangled
-dataset: a histogram of age, a scatter of BMI vs. some
-biomarker coloured by sex, a faceted bar chart of
-prevalence by group.)
+Take yesterday's `cohort` and produce three figures: a
+histogram of age, a coloured scatter of SBP vs. BMI, a
+faceted comparison of fasting glucose by age group.
+
+```r
+library(tidyverse)
+cohort <- read_csv("data/cohort.csv")
+
+# 1. Histogram of age
+p1 <- ggplot(cohort, aes(x = age)) +
+  geom_histogram(binwidth = 5, fill = "steelblue",
+                 colour = "white") +
+  labs(title = "Age distribution",
+       x = "Age (years)", y = "Count") +
+  theme_minimal(base_size = 12)
+
+# 2. Scatter of SBP vs. BMI, coloured by sex
+p2 <- ggplot(cohort, aes(x = bmi, y = sbp, colour = sex)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "BMI (kg/m^2)", y = "SBP (mmHg)",
+       colour = "Sex") +
+  theme_minimal(base_size = 12)
+
+# 3. Faceted boxplot of fasting glucose by age group
+p3 <- ggplot(cohort, aes(x = age_group, y = fasting_glucose,
+                         fill = sex)) +
+  geom_boxplot() +
+  labs(x = "Age group", y = "Fasting glucose (mg/dL)",
+       fill = "Sex") +
+  theme_minimal(base_size = 12)
+
+# save
+ggsave("figures/age-hist.png", p1, width = 5, height = 4,
+       dpi = 300)
+ggsave("figures/sbp-bmi.png",  p2, width = 6, height = 4,
+       dpi = 300)
+ggsave("figures/glucose-box.png", p3, width = 6, height = 4,
+       dpi = 300)
+```
+
+These three figures together would make a respectable
+'descriptive figures' panel in a journal article.
 
 ## Homework
 
-1. (TODO) Recreate four published figures from the
-   specifications provided. The original publication
-   reference is given for each.
-2. (TODO) Plot a continuous variable on a log scale and
-   explain when this is appropriate.
-3. (TODO) Customise a figure with a journal-style theme
-   (no grid, larger axis fonts, specified colour
-   palette).
-4. (TODO) Produce a faceted figure showing the same
-   relationship across three groups. Comment on what
-   the facets reveal.
-5. (TODO) Save all your figures as both PNG (for screen)
-   and PDF (for print).
+1. **Recreate four figures.** For each of the four
+   specifications below, produce the figure from
+   yesterday's `cohort` dataset.
+
+   (a) Histogram of `bmi` with bin width 1 and the title
+       'BMI distribution'.
+
+   (b) Scatter of `fasting_glucose` (y) vs. `bmi` (x),
+       coloured by `diabetic`, with a linear smoother
+       per group, log-scaled y-axis.
+
+   (c) Boxplot of `sbp` by `age_group` faceted by `sex`.
+
+   (d) Bar chart of count by `race`, sorted from most
+       common to least common.
+
+2. **Log scale.** Plot `fasting_glucose` (y) against
+   `bmi` (x) with both natural and log y-axes (two
+   figures, side by side or sequential). When does the
+   log scale change what you see? When does it not?
+
+3. **Journal theme.** Customise figure 1(b) with a
+   journal-style theme: white background, grid only on
+   the y-axis, larger axis font, a specified colour
+   palette (e.g., `scale_colour_manual(values = c("FALSE"
+   = "grey50", "TRUE" = "firebrick"))`).
+
+4. **Faceted comparison.** Plot the relationship between
+   `sbp` (y) and `bmi` (x) with `geom_point` plus
+   `geom_smooth`, faceted by `age_group` (three panels).
+   Comment in 1-2 sentences on what the facets reveal.
+
+5. **Save.** Save figures (a) through (d) from problem 1
+   as both PNG (300 dpi) and PDF, with widths 5 inches
+   for histogram and 6 inches for the others.
 
 ## Solutions
 
-(TODO)
+**Problem 1.**
+
+```r
+# (a)
+ggplot(cohort, aes(x = bmi)) +
+  geom_histogram(binwidth = 1, fill = "steelblue",
+                 colour = "white") +
+  labs(title = "BMI distribution",
+       x = "BMI (kg/m^2)", y = "Count") +
+  theme_minimal()
+
+# (b)
+ggplot(cohort, aes(x = bmi, y = fasting_glucose,
+                   colour = diabetic)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_y_log10() +
+  labs(x = "BMI (kg/m^2)",
+       y = "Fasting glucose (mg/dL, log scale)",
+       colour = "Diabetic") +
+  theme_minimal()
+
+# (c)
+ggplot(cohort, aes(x = age_group, y = sbp)) +
+  geom_boxplot() +
+  facet_wrap(~ sex) +
+  labs(x = "Age group", y = "SBP (mmHg)") +
+  theme_minimal()
+
+# (d)
+cohort |>
+  count(race) |>
+  mutate(race = fct_reorder(race, n, .desc = TRUE)) |>
+  ggplot(aes(x = race, y = n)) +
+  geom_col(fill = "steelblue") +
+  labs(x = "Race", y = "Count") +
+  theme_minimal()
+```
+
+`fct_reorder()` reorders the factor levels by the count;
+`geom_col()` is `geom_bar(stat = "identity")` (use the
+y-values as-is rather than counting).
+
+**Problem 2.** The log scale changes what you see when
+the underlying distribution is right-skewed (typical for
+fasting glucose and most lab values). The log axis
+linearises a multiplicative relationship; differences at
+the high end appear less compressed.
+
+**Problem 3.**
+
+```r
+ggplot(cohort, aes(x = bmi, y = fasting_glucose,
+                   colour = diabetic)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_y_log10() +
+  scale_colour_manual(values = c("FALSE" = "grey50",
+                                  "TRUE"  = "firebrick"),
+                      labels = c("No", "Yes")) +
+  labs(x = "BMI (kg/m^2)",
+       y = "Fasting glucose (mg/dL, log)",
+       colour = "Diabetic") +
+  theme_classic(base_size = 14) +
+  theme(panel.grid.major.y = element_line(),
+        panel.grid.minor.y = element_line())
+```
+
+`theme_classic()` is the closest to a typical journal
+look. The `theme()` modifier adds the y-axis grid back.
+
+**Problem 4.**
+
+```r
+ggplot(cohort, aes(x = bmi, y = sbp)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(method = "lm") +
+  facet_wrap(~ age_group) +
+  labs(x = "BMI", y = "SBP") +
+  theme_minimal()
+```
+
+The relationship between BMI and SBP is positive in
+every age group; the slope appears similar across
+groups but the intercept is higher in the older group
+(because SBP rises with age independent of BMI).
+
+**Problem 5.**
+
+```r
+ggsave("figures/bmi-hist.png", p_a,  width = 5, height = 4, dpi = 300)
+ggsave("figures/bmi-hist.pdf", p_a,  width = 5, height = 4)
+ggsave("figures/glucose-bmi.png", p_b, width = 6, height = 4, dpi = 300)
+ggsave("figures/glucose-bmi.pdf", p_b, width = 6, height = 4)
+ggsave("figures/sbp-box.png", p_c,   width = 6, height = 4, dpi = 300)
+ggsave("figures/sbp-box.pdf", p_c,   width = 6, height = 4)
+ggsave("figures/race-bar.png", p_d,  width = 6, height = 4, dpi = 300)
+ggsave("figures/race-bar.pdf", p_d,  width = 6, height = 4)
+```
 
 ## What's next
 
 Day 4 covers writing functions, control flow, and basic
-applied statistics. We will revisit yesterday's dataset
-and run statistical tests on it.
+applied statistics. We will revisit the `cohort` dataset
+from Days 2 and 3 and run statistical tests on it.

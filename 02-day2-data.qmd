@@ -15,48 +15,439 @@ By the end of this day you should be able to:
 
 ## Lecture
 
-(TODO: ~1 hour of lecture content covering:)
+Real biostatistical work starts with someone handing you a
+spreadsheet, a CSV from the EHR, or an export from REDCap.
+The first hour of an analysis is usually loading that data
+into R, looking at it, and getting it into a shape that
+your analysis can consume. The `tidyverse` is the modern
+toolkit for that work; the six core `dplyr` verbs are 90%
+of what you need.
 
-- Tidy data: one row per observation, one column per
-  variable
-- Reading CSV with `readr::read_csv()`
-- Reading Excel with `readxl::read_excel()`
-- Tibbles vs. data frames
-- The six dplyr verbs
-- The native pipe `|>`
-- Joining tables
+### Installing the tidyverse
+
+Once, in your R session:
+
+```r
+install.packages("tidyverse")
+```
+
+This installs `dplyr`, `tidyr`, `readr`, `ggplot2`, and a
+handful of supporting packages. After installation, load
+them at the start of every script:
+
+```r
+library(tidyverse)
+```
+
+You will see a startup message listing the packages and
+flagging any conflicts with base R. The conflicts to know
+about: `filter()` and `lag()` are masked from `stats`. In
+practice this matters only when working with time series.
+
+### Tidy data
+
+The convention the tidyverse rests on:
+
+- One row per **observation**.
+- One column per **variable**.
+- One value per **cell**.
+
+A tidy dataset is what most statistical functions expect.
+Real data is often untidy (multiple variables in one
+column, multiple observations in one row). Day 2 assumes
+the data arrives roughly tidy; Day 4 has a homework
+problem on tidying.
+
+### Reading data
+
+CSV files are the most common format:
+
+```r
+library(tidyverse)
+patients <- read_csv("data/patients.csv")
+```
+
+`read_csv()` returns a **tibble** — a modern data frame.
+It prints nicely (only the first 10 rows; columns flagged
+by type), and it does not silently convert characters to
+factors the way base R's `read.csv()` did historically.
+
+Excel files:
+
+```r
+library(readxl)
+patients <- read_excel("data/patients.xlsx", sheet = 1)
+```
+
+For SAS, SPSS, Stata, REDCap, and other formats, the
+`haven`, `REDCapR`, and adjacent packages handle the
+import. The pattern is the same: `read_*()` returns a
+tibble.
+
+After reading, look at the data:
+
+```r
+patients
+#> # A tibble: 200 × 5
+#>      id   age sex     bmi sbp
+#>   <dbl> <dbl> <chr> <dbl> <dbl>
+#> 1     1    47 F      28.4   132
+#> 2     2    62 M      31.1   148
+#> ...
+
+glimpse(patients)
+#> Rows: 200
+#> Columns: 5
+#> $ id  <dbl> 1, 2, 3, 4, ...
+#> $ age <dbl> 47, 62, 35, ...
+#> $ sex <chr> "F", "M", "F", ...
+```
+
+`glimpse()` is the right first look at every dataset.
+`View(patients)` opens a spreadsheet-style viewer in
+RStudio.
+
+### The six dplyr verbs
+
+Each verb takes a tibble as input and returns a tibble.
+
+**`filter()`** keeps rows that match a condition:
+
+```r
+adults <- filter(patients, age >= 18)
+hypertensive <- filter(patients, sbp >= 140)
+adult_women <- filter(patients, age >= 18, sex == "F")
+```
+
+Multiple conditions in one call are combined with AND.
+For OR, use `|`:
+
+```r
+high_risk <- filter(patients, sbp >= 140 | bmi >= 30)
+```
+
+**`select()`** keeps columns:
+
+```r
+demo <- select(patients, id, age, sex)
+no_id <- select(patients, -id)
+```
+
+**`mutate()`** adds or modifies columns:
+
+```r
+patients <- mutate(patients,
+                   age_group = case_when(
+                     age < 30 ~ "young",
+                     age < 65 ~ "middle",
+                     TRUE     ~ "older"
+                   ),
+                   bmi_category = case_when(
+                     bmi < 25 ~ "normal",
+                     bmi < 30 ~ "overweight",
+                     TRUE     ~ "obese"
+                   ))
+```
+
+`case_when()` is the multi-branch conditional. The right-
+hand side after `~` is the value when the left-hand
+condition is `TRUE`. Conditions are evaluated top to
+bottom; the `TRUE` at the end is the catch-all.
+
+**`summarise()`** collapses a tibble to one or more
+summary values:
+
+```r
+summarise(patients,
+          n = n(),
+          mean_age = mean(age, na.rm = TRUE),
+          mean_sbp = mean(sbp, na.rm = TRUE))
+#> # A tibble: 1 × 3
+#>       n mean_age mean_sbp
+#>   <int>    <dbl>    <dbl>
+#> 1   200     46.3    128.5
+```
+
+**`arrange()`** sorts:
+
+```r
+arrange(patients, age)
+arrange(patients, desc(sbp))
+```
+
+**`group_by()`** sets a grouping for subsequent verbs.
+Combined with `summarise()`, it produces per-group
+summaries:
+
+```r
+patients |>
+  group_by(sex) |>
+  summarise(n = n(),
+            mean_age = mean(age),
+            mean_sbp = mean(sbp))
+#> # A tibble: 2 × 4
+#>   sex       n mean_age mean_sbp
+#>   <chr> <int>    <dbl>    <dbl>
+#> 1 F       110     45.2    126.1
+#> 2 M        90     47.8    131.4
+```
+
+Note the `|>` (the **native pipe**, R 4.1+). It takes the
+value on the left and passes it as the first argument to
+the function on the right. Chained pipes read top-to-
+bottom and are the standard tidyverse idiom:
+
+```r
+patients |>
+  filter(age >= 40) |>
+  mutate(map = sbp * 2/3 + sbp_dia * 1/3) |>
+  group_by(sex, age_group) |>
+  summarise(n = n(),
+            mean_map = mean(map, na.rm = TRUE),
+            .groups = "drop")
+```
+
+The `.groups = "drop"` removes the grouping after the
+summary; without it, downstream operations remain
+grouped, which is occasionally a source of surprise.
+
+### Joining tables
+
+Real data lives in multiple tables. Demographics in one
+file, lab results in another, medications in a third. The
+join verbs combine them.
+
+```r
+patients
+#> # A tibble: 200 × 5
+#>      id   age sex     bmi sbp
+labs
+#> # A tibble: 410 × 3
+#>      id   visit_date   hba1c
+```
+
+Combine with `left_join()` (keep all rows from the left
+table, add matching rows from the right):
+
+```r
+combined <- patients |>
+  left_join(labs, by = "id")
+```
+
+Each patient in `patients` may have multiple lab visits in
+`labs`; the result has one row per (patient, visit) pair.
+If you want one row per patient, summarise the labs
+before joining:
+
+```r
+labs_per_patient <- labs |>
+  group_by(id) |>
+  summarise(latest_hba1c = last(hba1c, order_by = visit_date),
+            n_visits = n())
+
+combined <- patients |>
+  left_join(labs_per_patient, by = "id")
+```
+
+Other joins:
+
+- `inner_join()` keeps only IDs present in both tables.
+- `right_join()` is `left_join()` with arguments
+  swapped; rarely used.
+- `full_join()` keeps all IDs from either table.
+- `anti_join()` keeps left-table rows that have no match
+  in the right table — useful for finding data-quality
+  problems.
+
+Always check the row count before and after a join. A
+join that unexpectedly multiplies rows means the join key
+is not unique on one side; investigate before proceeding.
+
+::: {.callout-note}
+A common pattern in clinical data: the join key is a
+patient ID plus a visit date. Use `by = c("id", "visit_date")`
+to join on multiple columns.
+:::
 
 ## Worked example: NHANES-style cohort wrangling
 
-(TODO: A worked example using a small public-health
-dataset, e.g., a NHANES subset, showing the day's verbs
-end to end: import, filter to the subset of interest,
-select relevant columns, compute derived variables,
-group and summarise, save the result.)
+The data: a synthetic NHANES-style file with 500 adults,
+columns `id`, `age`, `sex`, `race`, `bmi`, `sbp`,
+`fasting_glucose`. The objective: characterise the
+cohort, identify the diabetic subgroup, compare blood
+pressure across age groups stratified by sex.
+
+```r
+library(tidyverse)
+
+# read
+nhanes <- read_csv("data/nhanes-mock.csv")
+
+# look at the data first
+glimpse(nhanes)
+#> Rows: 500
+#> Columns: 7
+#> $ id              <dbl> 1, 2, 3, ...
+#> $ age             <dbl> 47, 62, 35, ...
+#> $ sex             <chr> "F", "M", ...
+#> $ race            <chr> "White", "Black", ...
+#> $ bmi             <dbl> 28.4, 31.1, ...
+#> $ sbp             <dbl> 132, 148, ...
+#> $ fasting_glucose <dbl> 98, 154, 95, ...
+
+# add derived variables
+nhanes <- nhanes |>
+  mutate(diabetic = fasting_glucose >= 126,
+         age_group = case_when(
+           age < 40 ~ "<40",
+           age < 60 ~ "40-59",
+           TRUE     ~ "60+"
+         ))
+
+# overall summary
+nhanes |>
+  summarise(n = n(),
+            mean_age = mean(age),
+            mean_bmi = mean(bmi),
+            prop_diabetic = mean(diabetic))
+#> # A tibble: 1 × 4
+#>       n mean_age mean_bmi prop_diabetic
+#>   <int>    <dbl>    <dbl>         <dbl>
+#> 1   500     49.4     27.8         0.118
+
+# stratified by age group and sex
+nhanes |>
+  group_by(age_group, sex) |>
+  summarise(n = n(),
+            mean_sbp = mean(sbp),
+            prop_diabetic = mean(diabetic),
+            .groups = "drop") |>
+  arrange(age_group, sex)
+#> # A tibble: 6 × 5
+#>   age_group sex       n mean_sbp prop_diabetic
+#>   <chr>     <chr> <int>    <dbl>         <dbl>
+#> 1 <40       F        86     117.         0.023
+#> 2 <40       M        72     119.         0.014
+#> 3 40-59     F        99     124.         0.131
+#> 4 40-59     M        88     128.         0.114
+#> 5 60+       F        85     134.         0.176
+#> 6 60+       M        70     138.         0.243
+```
+
+The pipeline is six lines of code that produces a publishable
+descriptive table. The pattern — read, glimpse, mutate-derived,
+group, summarise — is the rhythm you will use every day.
 
 ## Homework
 
-1. (TODO) Download a small public-health dataset
-   (specified in the worked example) and read it into R.
-2. (TODO) Filter to a specified sub-cohort (e.g., adults
-   over 40 with a particular condition) and report the
-   sample size.
-3. (TODO) Compute summary statistics by group: mean
-   age, mean BMI, count of cases, by sex.
-4. (TODO) Join two tables to add a covariate from a
-   second source. Verify the join did what you
-   expected.
-5. (TODO) Identify three rows in the dataset with
-   anomalous values (e.g., implausible ages or
-   measurements). Explain what the anomaly is and how
-   you would handle it.
+The data file for the homework lives at the URL given on
+the course page (a synthetic public-health dataset of
+about 500 records). Download it and save it locally as
+`cohort.csv` before starting.
+
+1. **Load and inspect.** Read the dataset into R as
+   `cohort`. Use `glimpse()` to report the variables and
+   types. How many rows? How many columns?
+
+2. **Filter to a sub-cohort.** Filter to adults aged 40
+   and over with `bmi >= 25`. Report the sample size.
+
+3. **Stratified summary.** Compute the mean of all
+   numeric variables, grouped by the sex variable.
+
+4. **Two-table join.** A second file (`labs.csv`) gives
+   recent lab results, with multiple visits per patient.
+   For each patient, retain only the most recent visit
+   (use `slice_max(visit_date, n = 1)` after grouping by
+   ID). Join the result to `cohort` so each cohort row
+   gets that patient's most recent lab values. Verify
+   that the joined table has the same number of rows as
+   the original `cohort`.
+
+5. **Identify anomalies.** Find three rows in `cohort`
+   that have implausible values (e.g., negative ages,
+   BMI above 70, or other clearly wrong numbers).
+   Explain why each is implausible and propose how you
+   would handle it (drop, set to `NA`, contact data
+   source).
 
 ## Solutions
 
-(TODO)
+**Problem 1.**
+
+```r
+library(tidyverse)
+cohort <- read_csv("data/cohort.csv")
+glimpse(cohort)
+#> Rows: 500
+#> Columns: 8 (etc.)
+nrow(cohort); ncol(cohort)
+```
+
+**Problem 2.**
+
+```r
+sub <- cohort |>
+  filter(age >= 40, bmi >= 25)
+nrow(sub)
+```
+
+**Problem 3.**
+
+```r
+cohort |>
+  group_by(sex) |>
+  summarise(across(where(is.numeric), \(x) mean(x, na.rm = TRUE)))
+```
+
+`across()` plus `where(is.numeric)` applies the same
+summary function to every numeric column. The
+`\(x) mean(x, na.rm = TRUE)` lambda is R's anonymous
+function syntax (also written `function(x) ...`).
+
+**Problem 4.**
+
+```r
+labs <- read_csv("data/labs.csv")
+
+latest_labs <- labs |>
+  group_by(id) |>
+  slice_max(visit_date, n = 1, with_ties = FALSE) |>
+  ungroup()
+
+combined <- cohort |>
+  left_join(latest_labs, by = "id")
+
+nrow(combined) == nrow(cohort)
+#> [1] TRUE
+```
+
+The `with_ties = FALSE` argument resolves ties (two
+visits on the same day for the same patient) by taking
+the first; in practice you might want a more deliberate
+rule.
+
+**Problem 5.** Implausible values for the synthetic
+dataset. For each, two reasonable handling decisions:
+
+- A negative age is a data-entry or sentinel value (e.g.,
+  -99 used to encode missing). Set to `NA`. Document the
+  decision.
+- BMI above 70 is biologically possible but rare; verify
+  with the source. If verification is impossible, treat
+  as `NA` for any analysis whose validity depends on
+  reasonable BMI distributions, with a sensitivity
+  analysis including the value.
+- Systolic blood pressure of 0 is impossible (the
+  patient would not be alive). Set to `NA`. Document.
+
+The general lesson: data-quality issues are the analyst's
+to identify and to handle deliberately. Silent
+imputation, dropping, or inclusion of clearly wrong data
+all bias the result; documented handling does not.
 
 ## What's next
 
 Day 3 covers visualisation with `ggplot2`. We will use
-the dataset from Day 2's worked example, so save your
-processed data file at the end of Day 2.
+the cohort dataset from Day 2's worked example, so save
+your processed `cohort` object at the end of Day 2.
