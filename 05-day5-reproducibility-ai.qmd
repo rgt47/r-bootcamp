@@ -50,7 +50,7 @@ This report describes the cohort I assembled on Day 2.
 
 # Methods
 
-```{r}
+```{{r}}
 #| label: setup
 #| include: false
 library(tidyverse)
@@ -64,7 +64,7 @@ The cohort has `r nrow(cohort)` patients across
 
 ## Descriptive statistics
 
-```{r}
+```{{r}}
 cohort |>
   group_by(sex) |>
   summarise(n = n(),
@@ -72,7 +72,7 @@ cohort |>
             mean_sbp = mean(sbp))
 ```
 
-```{r}
+```{{r}}
 #| fig-cap: "Systolic blood pressure by sex."
 ggplot(cohort, aes(x = sex, y = sbp)) +
   geom_boxplot() +
