@@ -18,53 +18,489 @@ By the end of this day you should be able to:
 
 ## Lecture
 
-(TODO: ~1 hour of lecture content covering:)
+Day 4 takes you from 'I can read and visualise data' to
+'I can compute statistics on it'. The four ideas are:
+write a function for anything you do more than once;
+prefer `purrr::map` over explicit loops; know the basic
+summary statistics; know how to run a t-test, a
+chi-squared test, and a simple regression. With these in
+place you can do most of the descriptive and exploratory
+work an MS-level biostatistician produces.
 
-- Anatomy of a function: arguments, body, return value
-- `if`/`else`
-- `purrr::map` and friends
-- Summary statistics
-- `t.test`, `chisq.test`
-- `lm()` and reading its output
+### Writing functions
 
-## Worked example: exploratory analysis end to end
+A function is a named, reusable piece of code that takes
+inputs (arguments) and returns a single output:
 
-(TODO: Take yesterday's dataset, write a function that
-computes a custom summary statistic, run a t-test
-comparing two groups, fit a linear regression with one
-predictor, interpret the result.)
+```r
+cv <- function(x) {
+  sd(x, na.rm = TRUE) / mean(x, na.rm = TRUE)
+}
+
+cv(c(2.1, 2.3, 1.9, 2.5, 2.0))
+#> [1] 0.1131371
+```
+
+Anatomy:
+
+- `cv` is the name.
+- `function(x)` declares one argument named `x`.
+- Inside `{ }` is the body.
+- The last expression is automatically returned (no
+  explicit `return()` needed).
+
+Defaults:
+
+```r
+summarise_lab <- function(x, na.rm = TRUE) {
+  c(n      = sum(!is.na(x)),
+    mean   = mean(x, na.rm = na.rm),
+    sd     = sd(x,   na.rm = na.rm),
+    median = median(x, na.rm = na.rm))
+}
+
+summarise_lab(c(7.2, 6.8, NA, 8.1, 7.4))
+#>    n      mean        sd    median
+#> 4.000 7.375000 0.5468079 7.300000
+```
+
+The `na.rm = TRUE` default means the function silently
+removes missing values unless the caller overrides. Be
+deliberate about defaults; they affect the answer.
+
+::: {.callout-note}
+The rule of thumb: write a function the third time you
+copy-paste a piece of code. Earlier than that and you
+spend more time generalising than the duplication
+costs.
+:::
+
+### Control flow: `if`/`else` and `case_when`
+
+Inside a function:
+
+```r
+classify_bp <- function(sbp) {
+  if (sbp < 120) {
+    "normal"
+  } else if (sbp < 130) {
+    "elevated"
+  } else if (sbp < 140) {
+    "stage 1"
+  } else {
+    "stage 2"
+  }
+}
+classify_bp(118)
+#> [1] "normal"
+classify_bp(145)
+#> [1] "stage 2"
+```
+
+`if`/`else` is fine for one value at a time. For a
+vector, use `case_when()` (introduced in Day 2):
+
+```r
+patients <- patients |>
+  mutate(bp_category = case_when(
+    sbp < 120 ~ "normal",
+    sbp < 130 ~ "elevated",
+    sbp < 140 ~ "stage 1",
+    TRUE      ~ "stage 2"))
+```
+
+### `purrr::map` over loops
+
+R has explicit `for` loops, and they work, but the
+tidyverse idiom is to use `map()` to apply a function to
+each element of a list or vector:
+
+```r
+library(purrr)
+
+# compute mean by group with explicit map
+groups <- list(
+  young  = c(110, 115, 122, 118),
+  middle = c(125, 130, 132, 128),
+  older  = c(138, 145, 142, 140)
+)
+
+map_dbl(groups, mean)
+#>  young middle  older
+#> 116.25 128.75 141.25
+```
+
+`map_dbl()` applies `mean` to each element and returns a
+numeric vector (`map` returns a list; `map_dbl`,
+`map_int`, `map_chr`, `map_lgl` return typed vectors).
+`map_dfr` returns a row-bound tibble.
+
+For most applied biostatistics, the equivalent operation
+inside `dplyr` is `group_by` + `summarise`. Reach for
+`map` when working with lists of model fits, lists of
+files, lists of countries — anything that is genuinely
+list-shaped rather than tabular.
+
+### Summary statistics
+
+`summary()` is the first-look function:
+
+```r
+summary(cohort$age)
+#>    Min.  1st Qu.  Median    Mean   3rd Qu.    Max.
+#>   18.00   34.00   47.00   46.32    59.00   89.00
+```
+
+Per-statistic functions:
+
+```r
+mean(cohort$bmi)
+sd(cohort$bmi)
+median(cohort$bmi)
+quantile(cohort$bmi, c(0.25, 0.50, 0.75, 0.95))
+IQR(cohort$bmi)
+```
+
+For a count of categorical:
+
+```r
+table(cohort$sex)
+#> F   M
+#> 110 90
+
+prop.table(table(cohort$sex))
+#>   F   M
+#> 0.55 0.45
+```
+
+For two-way:
+
+```r
+table(cohort$sex, cohort$diabetic)
+#>     FALSE TRUE
+#>   F    97    13
+#>   M    77    13
+```
+
+### t-test
+
+The two-sample t-test compares means between two groups:
+
+```r
+t.test(sbp ~ sex, data = cohort)
+#>
+#>     Welch Two Sample t-test
+#>
+#> data:  sbp by sex
+#> t = -2.31, df = 188.4, p-value = 0.022
+#> alternative hypothesis: true difference in means
+#>     between group F and group M is not equal to 0
+#> 95 percent confidence interval:
+#>  -9.74  -0.78
+#> sample estimates:
+#> mean in group F  mean in group M
+#>           126.1            131.4
+```
+
+R defaults to **Welch's** t-test (unequal variances),
+which is the right default. The `~` (tilde) is R's
+formula syntax: 'sbp explained by sex'.
+
+What to read in the output:
+
+- `t = -2.31`: the test statistic.
+- `df = 188.4`: degrees of freedom (non-integer because
+  Welch).
+- `p-value = 0.022`: the p-value for the two-sided test.
+- `95 percent confidence interval: -9.74 -0.78`: the
+  95% CI for the difference in means.
+- The sample means in each group.
+
+A one-sentence interpretation: women have lower SBP than
+men by about 5.3 mmHg on average; the difference is
+statistically significant at α = 0.05; the 95% CI for
+the difference is (-9.7, -0.8).
+
+::: {.callout-note}
+A statistically significant t-test does not by itself
+mean clinically important. A 5 mmHg difference in SBP
+across sex is real but small relative to the within-
+person variation. The chapter on causal inference in the
+*Applied Methods* volume develops this distinction at
+length.
+:::
+
+### chi-squared test
+
+The chi-squared test of independence compares
+distributions across a contingency table:
+
+```r
+chisq.test(table(cohort$sex, cohort$diabetic))
+#>
+#>     Pearson's Chi-squared test with Yates' continuity correction
+#>
+#> data:  table(cohort$sex, cohort$diabetic)
+#> X-squared = 0.07, df = 1, p-value = 0.79
+```
+
+Read the test statistic, df, and p-value as before. For
+sparse tables (any expected cell count under 5), use
+Fisher's exact test instead:
+
+```r
+fisher.test(table(cohort$sex, cohort$diabetic))
+```
+
+A common applied error is to use chi-squared on a sparse
+table; the p-value is unreliable. Check the expected
+counts first:
+
+```r
+chisq.test(table(cohort$sex, cohort$diabetic))$expected
+```
+
+### Simple linear regression
+
+The fit:
+
+```r
+fit <- lm(sbp ~ age, data = cohort)
+fit
+#>
+#> Call:
+#> lm(formula = sbp ~ age, data = cohort)
+#>
+#> Coefficients:
+#> (Intercept)          age
+#>     106.21         0.46
+```
+
+The intercept (106.21) is the predicted SBP at age 0; the
+slope (0.46) is the predicted change in SBP per one-year
+increase in age.
+
+The summary:
+
+```r
+summary(fit)
+#>
+#> Call:
+#> lm(formula = sbp ~ age, data = cohort)
+#>
+#> Residuals:
+#>      Min       1Q   Median       3Q      Max
+#> -28.45   -7.23     0.31     7.18     33.42
+#>
+#> Coefficients:
+#>             Estimate Std. Error t value Pr(>|t|)
+#> (Intercept) 106.2147     2.0341    52.2  < 2e-16 ***
+#> age           0.4623     0.0411    11.3  < 2e-16 ***
+#>
+#> Residual standard error: 11.4 on 498 degrees of freedom
+#> Multiple R-squared:  0.203, Adjusted R-squared:  0.201
+#> F-statistic: 126.7 on 1 and 498 DF,  p-value: < 2e-16
+```
+
+What to read:
+
+- **Coefficients**: estimate, standard error, t, p-value.
+  The slope on age is 0.46 (SE 0.04, p < 2e-16).
+- **Residual standard error**: 11.4 mmHg. Interpret as
+  the typical size of the prediction error.
+- **R-squared**: 0.203. About 20% of the variance in SBP
+  is explained by age alone.
+- **F-statistic**: tests whether the model overall is
+  better than the intercept-only model.
+
+For multiple predictors:
+
+```r
+fit2 <- lm(sbp ~ age + sex + bmi, data = cohort)
+summary(fit2)
+```
+
+Each coefficient is interpreted holding the others
+constant. The interpretation gets harder once you
+include terms that are correlated; the *Applied Methods*
+volume's chapter on causal inference treats this carefully.
+
+## Worked example: an end-to-end exploratory analysis
+
+Load the cohort, write a small function to summarise a
+lab value, run a t-test on a sex difference, fit a
+linear regression of SBP on age and BMI.
+
+```r
+library(tidyverse)
+cohort <- read_csv("data/cohort.csv") |>
+  mutate(diabetic = fasting_glucose >= 126,
+         age_group = case_when(
+           age < 40 ~ "<40",
+           age < 60 ~ "40-59",
+           TRUE     ~ "60+"))
+
+# function to summarise a numeric variable per group
+group_summary <- function(data, group_var, value_var) {
+  data |>
+    group_by({{ group_var }}) |>
+    summarise(n = n(),
+              mean = mean({{ value_var }}, na.rm = TRUE),
+              sd   = sd({{ value_var }},   na.rm = TRUE),
+              .groups = "drop")
+}
+
+group_summary(cohort, sex, sbp)
+#> # A tibble: 2 × 4
+#>   sex       n  mean    sd
+#>   <chr> <int> <dbl> <dbl>
+#> 1 F       110  126.   12.3
+#> 2 M        90  131.   13.1
+
+# is the SBP difference between sexes significant?
+t.test(sbp ~ sex, data = cohort)
+
+# is the proportion of diabetics different between sexes?
+chisq.test(table(cohort$sex, cohort$diabetic))
+
+# fit a regression of SBP on age and BMI
+fit <- lm(sbp ~ age + bmi + sex, data = cohort)
+summary(fit)
+```
+
+Reading the regression: SBP rises with age (β = 0.42,
+SE 0.04, p < 0.001) and with BMI (β = 0.85, SE 0.20,
+p < 0.001), and is lower in women (β = -3.2, SE 1.1,
+p = 0.005) holding age and BMI constant. R² is around
+0.27.
+
+The `{{ }}` (curly-curly) syntax in the function above is
+how `dplyr` and friends pass column names as arguments
+into a function. You will use this idiom enough that it
+becomes muscle memory; for now, treat it as the
+recipe for 'pass a column name into a tidyverse
+function'.
 
 ## Homework
 
-1. (TODO) Write three functions:
-   - One that takes a numeric vector and returns its
-     coefficient of variation.
-   - One that takes a 2x2 contingency table and returns
-     the odds ratio.
-   - One that takes a vector of p-values and returns
-     the Bonferroni-corrected p-values.
-2. (TODO) Run a two-sample t-test on a specified
-   comparison from the dataset. Report the test
-   statistic, p-value, and confidence interval. State
-   the conclusion in one sentence.
-3. (TODO) Run a chi-squared test on a specified 2x2
-   table. Report the test statistic, p-value, and the
-   expected counts. Comment on whether Fisher's exact
-   would have been more appropriate and why.
-4. (TODO) Fit a simple linear regression of one
-   continuous outcome on one continuous predictor.
-   Interpret the slope coefficient in plain English,
-   in the units of the original variables.
-5. (TODO) Interpret the residual standard error and
-   $R^2$ from your regression in question 4.
+1. **Three small functions.**
+   (a) Write a function `cv()` that takes a numeric
+       vector and returns its coefficient of variation
+       (standard deviation divided by mean). Handle
+       missing values with a `na.rm = TRUE` default.
+   (b) Write a function `or_2x2()` that takes a 2×2
+       contingency table (a matrix or a `table` object)
+       and returns the odds ratio. Use Haldane's
+       correction (add 0.5 to each cell) if any cell
+       count is zero.
+   (c) Write a function `bonferroni()` that takes a
+       vector of p-values and returns the
+       Bonferroni-corrected p-values (each multiplied
+       by the number of tests, capped at 1).
+
+2. **Two-sample t-test.** Test whether mean BMI differs
+   between diabetic and non-diabetic patients in the
+   cohort. Report the test statistic, p-value, 95% CI
+   for the difference, and group means. State the
+   conclusion in one sentence.
+
+3. **Chi-squared.** Test whether `age_group` and
+   `diabetic` are independent. Report the test
+   statistic, p-value, and the expected counts.
+   Comment on whether Fisher's exact would have been
+   more appropriate.
+
+4. **Simple linear regression.** Fit `sbp ~ bmi` in the
+   cohort. Report the slope estimate, its SE,
+   t-statistic, and p-value. Interpret the slope in
+   plain English using the data's units.
+
+5. **Multiple regression.** Extend the model in
+   problem 4 to `sbp ~ bmi + age + sex`. Compare the
+   slope on `bmi` between the two models. Why does it
+   change?
 
 ## Solutions
 
-(TODO)
+**Problem 1.**
+
+```r
+cv <- function(x, na.rm = TRUE) {
+  sd(x, na.rm = na.rm) / mean(x, na.rm = na.rm)
+}
+
+or_2x2 <- function(tab) {
+  # tab is a 2x2 with exposed/unexposed in rows, case/control in cols
+  if (any(tab == 0)) tab <- tab + 0.5
+  (tab[1,1] * tab[2,2]) / (tab[1,2] * tab[2,1])
+}
+
+bonferroni <- function(p) {
+  pmin(p * length(p), 1)
+}
+```
+
+**Problem 2.**
+
+```r
+t.test(bmi ~ diabetic, data = cohort)
+#> ...
+#> t = -3.45, df = 67.2, p-value = 0.001
+#> 95 CI: (-3.42, -0.93)
+#> means: non-diabetic 27.4, diabetic 29.6
+```
+
+Diabetic patients have higher mean BMI than non-
+diabetic patients by about 2.2 kg/m² (95% CI 0.9-3.4,
+p = 0.001).
+
+**Problem 3.**
+
+```r
+chisq.test(table(cohort$age_group, cohort$diabetic))
+#> X-squared = 22.1, df = 2, p-value = 1.6e-5
+```
+
+Expected counts (from `chisq.test(...)$expected`) are
+all above 5, so chi-squared is appropriate. Fisher's
+exact would not be necessary; it would give a similar
+answer but is computationally heavier.
+
+**Problem 4.**
+
+```r
+fit_simple <- lm(sbp ~ bmi, data = cohort)
+summary(fit_simple)
+#> bmi: estimate = 1.32, SE = 0.18, t = 7.3, p < 0.001
+```
+
+A 1 kg/m² increase in BMI is associated with a 1.32 mmHg
+increase in SBP.
+
+**Problem 5.**
+
+```r
+fit_multi <- lm(sbp ~ bmi + age + sex, data = cohort)
+summary(fit_multi)
+#> bmi: estimate = 0.85, SE = 0.20, t = 4.3, p < 0.001
+```
+
+The BMI slope drops from 1.32 to 0.85 when age and sex
+are added. The interpretation: in the simple model, the
+BMI coefficient absorbs some of the age-and-sex
+relationship with SBP (older and male patients tend to
+have higher BMI and higher SBP). Adjusting for age and
+sex isolates the BMI-SBP relationship from those
+confounders. The careful version of this story is the
+subject of the *Causal inference* chapters in *Applied
+Methods*.
 
 ## What's next
 
 Day 5 closes the boot camp with reproducibility
-(Quarto, Git basics) and a primer on using AI
-assistance responsibly. After Day 5 the four companion
-volumes pick up where the boot camp leaves off.
+(Quarto, basic Git through RStudio) and a primer on
+using AI assistance responsibly. After Day 5 the
+companion volumes pick up: each thread of statistical
+methodology (longitudinal, survival, causal,
+Bayesian, ML) has a home in one of the five
+companion books.

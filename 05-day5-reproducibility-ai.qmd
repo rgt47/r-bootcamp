@@ -18,76 +18,400 @@ By the end of this day you should be able to:
 
 ## Lecture
 
-(TODO: ~1 hour of lecture content covering:)
+The first four days have given you R as a calculator: you
+can read data, manipulate it, plot it, and compute
+statistics on it. Day 5 turns that into reproducible
+research output and introduces the AI tools you will
+already be using by the end of your first quarter.
+Nothing here is technically deep; everything here is the
+table-stakes you will be expected to have on day one.
 
-- Quarto in one paragraph: prose + code + output in a
-  single document.
-- A minimum viable Quarto report.
-- RStudio Projects: why they matter.
-- Git through the IDE: the four operations a beginner
-  needs (status, add, commit, history).
-- AI assistance: when to use, when not to use,
-  verification before trusting.
-- The four companion volumes and where each picks up.
+### Quarto
+
+Quarto is the document format for combining prose, R
+code, and code output (tables, figures) into a single
+file. The same source file renders to HTML for the web,
+PDF for print, and Word for collaborators who insist on
+it.
+
+A minimal Quarto document (`report.qmd`):
+
+````
+---
+title: "My first analysis"
+author: "Your name"
+date: today
+format: html
+---
+
+# Introduction
+
+This report describes the cohort I assembled on Day 2.
+
+# Methods
+
+```{r}
+#| label: setup
+#| include: false
+library(tidyverse)
+cohort <- read_csv("data/cohort.csv")
+```
+
+The cohort has `r nrow(cohort)` patients across
+`r length(unique(cohort$sex))` sex groups.
+
+# Results
+
+## Descriptive statistics
+
+```{r}
+cohort |>
+  group_by(sex) |>
+  summarise(n = n(),
+            mean_age = mean(age),
+            mean_sbp = mean(sbp))
+```
+
+```{r}
+#| fig-cap: "Systolic blood pressure by sex."
+ggplot(cohort, aes(x = sex, y = sbp)) +
+  geom_boxplot() +
+  theme_minimal()
+```
+
+# Conclusion
+
+Mean SBP is higher in men than in women in this cohort.
+````
+
+Render with the **Render** button in RStudio (or
+`quarto render report.qmd` in the terminal). The output
+is a self-contained HTML file with prose, code, code
+output, tables, and figures interleaved.
+
+The pieces:
+
+- **YAML front matter** at the top (between `---`
+  fences): metadata like title, author, output format.
+- **Markdown** for prose: `#` for headings, `*italic*`,
+  `**bold**`, etc.
+- **Code chunks** in fenced blocks marked
+  ` ```{r} `: R code that runs and (by default) shows
+  both code and output.
+- **Inline R** with `` `r ...` ``: R expression evaluated
+  and substituted.
+- **Chunk options** with `#|`: e.g.,
+  `#| include: false` hides the chunk from output;
+  `#| echo: false` hides the code but shows the output;
+  `#| fig-cap: "..."` adds a figure caption.
+
+A single Quarto report replaces the typical split between
+analysis script + exported figures + Word document. The
+document is reproducible: render again later, get the
+same output.
+
+### RStudio Projects
+
+A project is a folder with a `.Rproj` marker file. When
+you open the project, RStudio sets the working directory
+to the project root and remembers your open files and
+session state.
+
+Create one: **File → New Project → New Directory →
+New Project**, give it a name and a location, click
+Create.
+
+Inside the project, organise files by convention:
+
+```
+my-project/
+├── my-project.Rproj
+├── README.md
+├── data/
+│   ├── raw/
+│   └── processed/
+├── R/                    # scripts
+├── analysis/
+│   └── report.qmd
+├── figures/
+└── output/
+```
+
+The benefits of using projects:
+
+- Paths are relative to the project root. `read_csv("data/cohort.csv")`
+  works no matter where the project lives on your
+  machine.
+- The project is self-contained. Zip the folder, send to
+  a collaborator, they unzip and open the `.Rproj` file
+  and everything works.
+- Each project has its own R session (no leftover
+  variables from another analysis).
+
+Always work inside a project. The `getwd()` function
+should return the project root.
+
+### Git through the IDE
+
+Git tracks the history of changes to the files in your
+project. RStudio has a **Git** pane (top-right, between
+Environment and Files when Git is enabled) that shows
+all four operations a beginner needs.
+
+To turn on Git for an existing project: **Tools → Project
+Options → Git/SVN → Version control system: Git**. RStudio
+prompts you to commit; do so.
+
+The four operations:
+
+1. **Status**: which files have changed since the last
+   commit. Shown automatically in the Git pane: `M`
+   (modified), `?` (untracked), `A` (added), `D`
+   (deleted).
+2. **Add (stage)**: select files in the pane and click
+   the checkbox to stage. Staging is 'I want to include
+   this in the next commit'.
+3. **Commit**: click the Commit button, write a one-line
+   message describing what changed, click Commit. The
+   commit is a permanent snapshot.
+4. **History**: click the History button (clock icon) to
+   see all past commits with messages, authors, and
+   diffs.
+
+That covers single-developer Git. For collaboration,
+push and pull (working with a remote like GitHub) are
+the next two operations; they live in the same pane and
+are covered in the *Practicum* volume.
+
+A working pattern for daily research:
+
+- Start the day by writing one-line commits for the
+  changes you made yesterday (if you forgot at the time).
+- Commit at the end of each meaningful chunk of work
+  ('cleaned the cohort', 'added SBP-by-age figure',
+  'wrote first draft of methods').
+- Use descriptive commit messages. 'Updates' is useless
+  six months later; 'fix typo in age-group cutoff'
+  tells you what changed.
+
+### Using AI assistance responsibly
+
+You are using ChatGPT, Claude, or a similar tool right
+now. So is every other student in your programme. The
+question is not whether to use them; it is how to use
+them well.
+
+What AI is good for:
+
+- **Boilerplate.** 'Write me a `dplyr` pipeline that
+  filters to adults, groups by sex, and computes mean
+  age and BMI.' This is tedious-to-type code that the AI
+  generates correctly more often than not.
+- **Translation.** 'Translate this `lm` formula to
+  `glm` with a logistic family.' Format-conversion is
+  cheap to verify (run it; check the output).
+- **Explanation.** 'What does `na.rm = TRUE` do in
+  `mean()`?' Documentation lookup is fine.
+- **Debugging.** 'I get `Error: object "sbp" not found`,
+  here is my code.' Often catches a typo or a missing
+  column.
+
+What AI is **not** good for:
+
+- **Statistical judgement.** 'Should I use a t-test or a
+  Wilcoxon?' The AI will pick one and justify it
+  plausibly. It does not know your context.
+- **Real-data verification.** AI-generated code
+  frequently does what the AI thinks the data looks
+  like, not what your data actually looks like. Run the
+  code on your data; don't take its claims about output
+  at face value.
+- **Hallucinated functions.** AI will sometimes generate
+  `dplyr::summarise_groups()` (does not exist) or
+  `tidyr::pivot_wider_with_progress()` (made up). Run
+  the code; let R's 'function not found' error catch
+  the hallucination.
+
+The discipline:
+
+1. **Read the code before you run it.** Understand each
+   line. If you cannot, ask the AI to explain (and
+   verify the explanation).
+2. **Run on edge cases.** What does the code do on an
+   empty input? On a vector with `NA`s? On a single-row
+   tibble?
+3. **Compare to a reference.** Cross-check against the
+   package documentation (`?dplyr::summarise`).
+4. **Document the AI involvement.** When you use AI in a
+   real analysis, note which parts of the work were
+   AI-assisted and how you verified them. The
+   transparency is now an explicit reviewer expectation
+   in many journals.
+
+The deeper version of this material — context
+engineering, reasoning models, agents, evaluation
+harnesses — is the subject of *Applied Generative AI for
+Public Health and Biostatistics*. For the boot camp,
+the discipline above is enough.
 
 ## Worked example: a one-page Quarto report
 
-(TODO: Build a one-page Quarto report from yesterday's
-analysis. Include a brief prose introduction, the data
-import and analysis code, a figure, a table, and a
-short conclusion. Render to HTML. Place it in a Git
-repository and commit.)
+Build a one-page Quarto report from yesterday's analysis,
+commit it to a Git repository, render to HTML.
+
+Step 1. Create the project. **File → New Project → New
+Directory → New Project**. Name it `cohort-analysis`.
+
+Step 2. Save your data. Copy `cohort.csv` into a `data/`
+subfolder.
+
+Step 3. Create `report.qmd`. Use the template at the top
+of the lecture, filling in the analysis pieces from
+Day 4 (the t-test, the regression, a figure).
+
+Step 4. Render. Click the **Render** button. RStudio
+produces `report.html` and (if PDF is configured)
+`report.pdf`.
+
+Step 5. Initialise Git. **Tools → Project Options →
+Git/SVN**. Stage all files and commit with the message
+'Initial cohort analysis report'.
+
+Step 6. Read your output. Open `report.html` in a
+browser. Confirm the prose, code, output, and figure all
+appear as expected.
+
+Step 7. Iterate. Make a change to the report (add a new
+section, modify a figure). Re-render. Commit. Look at
+the History to see the two commits.
+
+The whole flow takes 30-60 minutes the first time and
+about 5 minutes the second.
 
 ## Homework
 
-1. (TODO) Build a one-page Quarto report from your
-   own analysis from Day 4. Render to HTML.
-2. (TODO) Initialise a Git repository for the report,
-   commit it, and add a README explaining the
-   analysis. Push to a private GitHub repository.
-3. (TODO) Use an AI tool (ChatGPT, Claude, or
-   similar) to suggest improvements to your Day-4
-   analysis code. Verify the suggestions by running
-   them. Document one suggestion that improved your
-   code and one that was wrong, with explanation of
-   how you identified each.
-4. (TODO) Read the table-of-contents page of one of
-   the four companion volumes and identify two topics
-   you expect to encounter in your first quarter of
-   graduate study.
-5. (TODO) Write a one-paragraph reflection on what
-   you most need to practice in the first month of
-   the academic programme.
+1. **Build a Quarto report.** Build a one-page Quarto
+   report from your Day-4 analysis. Include: a brief
+   prose introduction (3-4 sentences), the data import
+   and cohort-construction code, a descriptive table by
+   group (e.g., `summarise()` per `sex`), a figure (one
+   from Day 3), a t-test or chi-squared test, and a
+   2-sentence conclusion. Render to HTML.
+
+2. **Initialise Git.** Initialise a Git repository for
+   your project. Commit the report and the data file
+   (or a `.gitignore` that excludes the data; either is
+   fine for this exercise). Add a README.md explaining
+   what the analysis is. Commit again. Look at the
+   history.
+
+3. **AI assistance, with verification.** Open ChatGPT,
+   Claude, or a similar tool. Ask it to suggest two
+   improvements to your Day-4 analysis code (paste the
+   code into the chat). Verify each suggestion by
+   running the modified code. Document one suggestion
+   that improved your code and one that was wrong, with
+   a sentence explaining how you identified the wrong
+   one.
+
+4. **Companion-volume look-ahead.** Read the
+   table-of-contents page for one of the four
+   companion volumes (URLs at the end of this chapter).
+   Identify two topics in the TOC that you expect to
+   encounter in your first quarter of graduate study.
+
+5. **Reflection.** Write a one-paragraph reflection on
+   what you most need to practice in the first month of
+   the programme. Be specific: not 'I should learn more
+   R' but 'I need to get faster at writing pipelines
+   that combine `filter`, `mutate`, `group_by`, and
+   `summarise` without looking up the syntax each
+   time'.
 
 ## Solutions
 
-(TODO)
+**Problem 1.** A reasonable Quarto report follows the
+template at the top of the lecture and adds your own
+analysis. The render should produce a self-contained
+HTML file under 1 MB. If your render fails, the most
+common causes are: missing package (`install.packages()`
+the missing package), wrong file path (the path is
+relative to the .qmd file), or a typo in YAML front
+matter (check colons and indentation).
 
-## What's next: the four companion volumes
+**Problem 2.** A typical first commit history:
+
+```
+8a4f2e1  Add t-test and regression to report
+3c9f1ad  Initial cohort analysis report
+```
+
+If your `data/cohort.csv` is large or sensitive, the
+right pattern is:
+- Add `data/` to `.gitignore`.
+- Document in the README how to obtain the data.
+- Commit the report (which references the data) but not
+  the data itself.
+
+**Problem 3.** Two examples of what 'verification'
+looks like:
+
+- *Suggestion that improved the code.* The AI suggests
+  replacing `cohort %>% filter(...)` with the native
+  pipe `cohort |> filter(...)` for consistency. You
+  verify by running the new pipeline; the output is
+  identical. Adopt the suggestion.
+
+- *Suggestion that was wrong.* The AI suggests
+  `cohort |> dplyr::summarise_groups(mean(sbp))` to
+  compute the per-group mean. You run it and get
+  'function not found'. The function does not exist; the
+  AI hallucinated. The correct code is
+  `cohort |> group_by(sex) |> summarise(mean(sbp))`.
+
+The pattern: run the code. AI failures are usually
+loud (errors); the silent failures (subtly wrong
+output) require deeper checking.
+
+**Problems 4 and 5.** Open-ended; the goal is to start
+forming the connection between today's bootcamp and
+your programme's actual curriculum.
+
+## What's next: the five companion volumes
 
 The boot camp ends here. The next thread of the
-curriculum picks up in one of four companion volumes,
+curriculum picks up in one of the companion volumes,
 depending on what your programme requires next:
 
 - **Reproducibility infrastructure** (Git in depth,
   Docker, renv, Quarto book authoring, CDISC, SAS,
-  AI-assisted coding): *Biostatistics Practicum*.
+  AI-assisted coding): *Biostatistics Practicum* at
+  <https://rgtlab.org/practicum>.
 - **Statistical methods and computing** (linear models,
   GLM, mixed models, survival, Bayesian computation,
   simulation, bootstrap, ggplot2 advanced, Shiny,
   parallel R, packages): *Statistical Computing in
-  the Age of AI*.
-- **Applied methodological core** (causal inference,
-  longitudinal at depth, survival applied, clinical
-  trials, missing data, meta-analysis, advanced
-  categorical): *Applied Statistical Methods for
-  Public Health*.
+  the Age of AI* at <https://scai.rgtlab.org>.
+- **Advanced computing** (numerical stability, MCMC
+  in depth, HPC, high-dimensional methods, ML,
+  software engineering): *Advanced Statistical
+  Computing in the Age of AI* at
+  <https://scai-advanced.rgtlab.org>.
 - **Generative AI integration** (RAG, agents,
   evaluation, regulation, deployment): *Applied
-  Generative AI for Public Health and Biostatistics*.
+  Generative AI for Public Health and
+  Biostatistics* at <https://applied-genai.rgtlab.org>.
+- **Applied methodological core** (causal inference,
+  longitudinal at applied depth, survival applied,
+  clinical trial design, missing data at depth,
+  meta-analysis, advanced categorical): *Applied
+  Statistical Methods for Public Health* at
+  <https://applied-methods.rgtlab.org>.
 
-The advanced computing volume (*Advanced Statistical
-Computing in the Age of AI*) is the natural follow-on
-to the introductory SCAI volume; it covers numerical
-stability, MCMC depth, HPC, high-dimensional methods,
-ML, software engineering, and advanced visualisation.
+The boot camp gave you the entry-level R competence the
+companion volumes assume. The companion volumes assume
+the rest of your graduate biostatistics training is
+underway in parallel; they build the methods curriculum
+on top of the R-side mechanics you now have.
+
+Good luck with the programme.
