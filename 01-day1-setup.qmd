@@ -1,0 +1,62 @@
+# Day 1: Setup and First Steps in R {#sec-day1}
+
+## Learning objectives
+
+By the end of this day you should be able to:
+
+- Install R and RStudio on macOS, Windows, or Linux.
+- Distinguish the console (interactive) from a script
+  (saved code).
+- Create and assign variables; perform arithmetic.
+- Recognise and work with R's core data types: numeric,
+  integer, character, logical, factor.
+- Index vectors by position, by name, and by logical
+  condition.
+- Recognise missing values (`NA`) and avoid the common
+  pitfalls.
+
+## Lecture
+
+(TODO: ~1 hour of lecture content covering:)
+
+- Installation and first launch
+- Console vs. script vs. RStudio
+- Vectors and arithmetic
+- Data types and coercion
+- Indexing
+- NA and friends
+
+## Worked example: a small biomedical dataset
+
+(TODO: A short worked example, e.g., compute summary
+statistics on a vector of patient ages, demonstrating
+the day's content end to end.)
+
+## Homework
+
+1. (TODO) Reproduce the worked example on your own
+   machine.
+2. (TODO) Write 5 small R expressions that compute the
+   answers to specified arithmetic questions.
+3. (TODO) Debug 3 broken R expressions; explain what
+   was wrong and fix it.
+4. (TODO) Create a vector of patient ages, index out
+   the children (under 18), the working-age adults
+   (18-65), and the seniors (65+). Compute the mean
+   age in each group.
+5. (TODO) Given a vector with NA values, compute the
+   mean both with and without removing the NA.
+   Describe what `mean()` does by default.
+
+## Solutions
+
+(TODO: Worked solutions to all homework problems. The
+student should attempt each problem before reading the
+solution.)
+
+## What's next
+
+Day 2 covers data import and manipulation: how to load
+a real dataset and use the `dplyr` verbs to wrangle it
+into shape. Bring your laptop with R and RStudio
+installed.

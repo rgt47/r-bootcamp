@@ -1,0 +1,22 @@
+# Colophon {.unnumbered}
+
+This book was produced with [Quarto](https://quarto.org),
+typeset in [Source Serif 4](https://fonts.adobe.com/fonts/source-serif),
+with code blocks set in [JetBrains
+Mono](https://www.jetbrains.com/lp/mono/). Source code is
+in R 4.4 or later.
+
+The book is hosted at <https://scai-advanced.rgtlab.org>
+on Netlify, with continuous deployment via GitHub Actions
+from the `rgt47/scai-advanced` repository on every push to
+`main`. The deployment recipe is in `HOSTING.md`.
+
+The cover is generated procedurally by
+`images/build-cover.py` from a watercolour gradient
+anchored on `#7a2c4e` (the volume's brand burgundy) and
+overlaid with Avenir typography. Re-running the script
+regenerates the cover; the procedural approach makes the
+cover reproducible and editable in version control rather
+than dependent on a one-shot AI image-generation step.
+
+Last rendered: see the build timestamp on the homepage.

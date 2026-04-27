@@ -1,0 +1,18 @@
+# Copyright {.unnumbered}
+
+*Advanced Statistical Computing in the Age of AI* by
+Ronald 'Ryy' G. Thomas is licensed under a
+[Creative Commons Attribution-NonCommercial-NoDerivatives
+4.0 International
+License](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+The code samples in this book are licensed under
+[Creative Commons CC0 1.0 Universal (CC0
+1.0)](https://creativecommons.org/publicdomain/zero/1.0/),
+i.e. the public domain.
+
+To cite this book, please use:
+
+> Thomas, R. G. (2026). *Advanced Statistical Computing in the
+> Age of AI*. Available at
+> <https://scai-advanced.rgtlab.org>.

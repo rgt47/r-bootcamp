@@ -1,0 +1,109 @@
+# Preface {.unnumbered}
+
+This volume is a one-week boot camp for incoming graduate
+students in biostatistics who arrive with no or minimal
+prior exposure to R. It is the prerequisite that every
+subsequent volume in the sequence assumes; it covers
+exactly what is needed for a student to be functional in
+R on day one of an MS programme.
+
+The design constraint is severe: five lectures, ten hours
+of homework, and the student arrives at the academic
+programme productive. The constraint is met by ruthless
+prioritisation. A great deal that R can do is omitted
+deliberately; the omitted material lives in the four
+companion volumes that follow.
+
+## What this book covers
+
+Five days, one chapter each:
+
+1. **Setup and first steps.** Install R and RStudio,
+   the console and the script, vectors and arithmetic,
+   data types (numeric, character, logical, factor),
+   indexing, missing values.
+2. **Data: tidy data, import, manipulate.** Read CSV
+   and Excel, tibbles, the six `dplyr` verbs (`filter`,
+   `select`, `mutate`, `summarise`, `arrange`, `group_by`),
+   the native pipe `|>`, joining tables.
+3. **Visualisation with ggplot2.** Grammar of graphics,
+   geoms, aesthetics, scales, facets, themes, saving
+   figures.
+4. **Functions, control flow, applied statistics.**
+   Writing functions, `if`/`else`, `purrr::map` over
+   loops, summary statistics, `t.test`, `chisq.test`,
+   simple linear regression with `lm`, interpreting
+   output.
+5. **Reproducibility and AI assistance.** Quarto basics
+   for reports, RStudio projects, basic Git through the
+   IDE, using AI assistance (ChatGPT, Claude) responsibly
+   with verification, pointers to the four companion
+   volumes for everything beyond.
+
+Each chapter is approximately 1 hour of reading and worked
+examples plus 2 hours of homework problems with worked
+solutions provided.
+
+## What this book does not cover
+
+The book deliberately omits — and points elsewhere for —
+nearly everything beyond the entry-level basics:
+
+- Statistical methodology beyond simple tests and `lm`.
+  See *Statistical Computing in the Age of AI*.
+- Reproducibility infrastructure beyond Quarto and
+  basic Git. See *Biostatistics Practicum*.
+- Advanced numerical methods, Bayesian computation,
+  high-dimensional analysis, machine learning. See
+  *Advanced Statistical Computing in the Age of AI*.
+- Generative AI integration, agents, evaluation. See
+  *Applied Generative AI for Public Health and
+  Biostatistics*.
+- Causal inference, longitudinal analysis, clinical
+  trial design, missing-data depth. See
+  *Applied Statistical Methods for Public Health*.
+
+The boot camp is intentionally narrow. The student
+finishes Day 5 and proceeds to the methods courses with
+the R-side mechanics in place, leaving the methods
+courses free to teach methods.
+
+## How this book is meant to be used
+
+The five-day cadence is the spine. A student starting
+the week with no R can finish the week ready for a
+graduate biostatistics programme. The cadence assumes
+roughly 3 hours of focused work per day:
+
+- **Hour 1:** Read the chapter, work through the inline
+  examples in your own R session.
+- **Hours 2-3:** Complete the homework problems. Solutions
+  are at the end of each chapter; check yourself only after
+  attempting each problem.
+
+The book also functions as a reference. After the boot
+camp, returning students often look up specific patterns
+(joining tables, customising a ggplot, writing a function)
+in their original chapters.
+
+## Prerequisites
+
+The book assumes:
+
+- A working laptop running macOS, Windows, or Linux.
+- Basic familiarity with using a computer (opening
+  applications, creating files, navigating the
+  filesystem).
+- Comfort with high-school algebra. No prior programming
+  experience is assumed.
+
+## Acknowledgements
+
+This boot camp consolidates patterns developed over two
+decades of teaching R to incoming biostatistics students.
+The Posit team's *R for Data Science* and the conventions
+of the modern tidyverse provide the technical scaffolding;
+the boot-camp pedagogy reflects experience with what
+incoming students actually need to know in the first
+week, as distinct from what an instructor might want them
+to know.

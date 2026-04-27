@@ -1,0 +1,66 @@
+# How to use this book {.unnumbered}
+
+This short orientation chapter explains the daily cadence,
+the chapter template, and the conventions used throughout.
+
+## The daily cadence
+
+Each day has the same shape:
+
+- **Lecture content (~1 hour).** Read the chapter, working
+  through the examples in your own R session as you
+  encounter them. Do not skip the examples; the chapter is
+  designed to be read with R open.
+- **Homework (~2 hours).** Five to eight problems, with
+  worked solutions at the end of the chapter. Attempt each
+  problem before checking the solution.
+
+The cadence assumes one chapter per day for five
+consecutive days. The boot camp can be compressed (two
+chapters per day across two-and-a-half days) or expanded
+(one chapter per week across a month) depending on the
+student's other commitments.
+
+## Chapter template
+
+Each chapter follows a five-section template:
+
+1. **Learning objectives.** A bulleted list of what the
+   student should be able to do by the end of the day.
+2. **Lecture.** The substantive content for the day, with
+   inline examples to run.
+3. **Worked example.** A small but realistic biomedical
+   example that uses the day's content end to end.
+4. **Homework.** Problems organised from easier to harder.
+5. **Solutions.** Worked solutions to all homework
+   problems. Read only after attempting the problem.
+
+There are no quizzes, no examinations, and no tests in
+this book. Self-assessment is via the homework solutions.
+
+## Conventions
+
+Visual cues used throughout the book are described on the
+[Conventions](conventions.qmd) page. The book is R-first;
+the style follows tidyverse conventions:
+
+- The native pipe `|>` is used throughout (not `%>%`).
+- Assignment uses `<-` (not `=`).
+- Variable names use `snake_case`.
+- Code lines are wrapped at 78 characters.
+
+## Companion volumes
+
+After the boot camp, the four follow-on volumes are at:
+
+- *Biostatistics Practicum* —
+  <https://rgtlab.org/practicum>
+- *Statistical Computing in the Age of AI* —
+  <https://scai.rgtlab.org>
+- *Advanced Statistical Computing in the Age of AI* —
+  <https://scai-advanced.rgtlab.org>
+- *Applied Generative AI for Public Health and
+  Biostatistics* — <https://applied-genai.rgtlab.org>
+
+The end of Chapter 5 lists which companion volume picks
+up which thread.

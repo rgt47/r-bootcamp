@@ -1,0 +1,16 @@
+# Advanced Statistical Computing in the Age of AI {.unnumbered}
+
+::: {.content-visible when-format='pdf'}
+\thispagestyle{empty}
+\vspace*{4cm}
+\begin{center}
+{\Huge\bfseries Advanced Statistical Computing in the Age of AI\par}
+\vspace{1cm}
+{\Large\itshape A graduate textbook in biostatistics\par}
+\end{center}
+\newpage
+:::
+
+::: {.content-visible when-format='html'}
+*A graduate textbook in biostatistics.*
+:::

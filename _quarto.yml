@@ -1,0 +1,104 @@
+project:
+  type: book
+  output-dir: _book
+
+book:
+  title: 'R for Biostatistics'
+  subtitle: 'A One-Week Boot Camp for incoming graduate students'
+  author: 'Ronald "Ryy" G. Thomas'
+  date: today
+  date-format: 'YYYY-MM-DD'
+
+  cover-image: images/cover.png
+  favicon: images/favicon.png
+
+  site-url: https://r-bootcamp.rgtlab.org
+  repo-url: https://github.com/rgt47/r-bootcamp
+  repo-branch: main
+  repo-actions: [edit, issue]
+
+  search: true
+  page-navigation: true
+  bread-crumbs: true
+  sidebar:
+    style: docked
+    collapse-level: 1
+
+  chapters:
+    - half-title.qmd
+    - copyright.qmd
+    - index.qmd
+    - preface.qmd
+    - conventions.qmd
+    - 00-intro.qmd
+
+    - part: 'Five Days'
+      chapters:
+        - 01-day1-setup.qmd
+        - 02-day2-data.qmd
+        - 03-day3-graphics.qmd
+        - 04-day4-functions-stats.qmd
+        - 05-day5-reproducibility-ai.qmd
+
+    - references.qmd
+
+  appendices:
+    - credits.qmd
+    - colophon.qmd
+
+format:
+  html:
+    theme:
+      - cosmo
+      - r-bootcamp.scss
+    include-after-body: nav-toggle.html
+    code-annotations: hover
+    code-link: true
+    code-copy: hover
+    code-overflow: wrap
+    code-tools:
+      source: repo
+      toggle: false
+    code-block-bg: true
+    code-block-border-left: '#2d5016'
+    highlight-style: arrow
+    fig-width: 7
+    fig-height: 4.5
+    fig-align: center
+    tbl-cap-location: top
+    toc-depth: 3
+    anchor-sections: true
+    smooth-scroll: true
+
+  pdf:
+    documentclass: scrbook
+    classoption: [11pt]
+    code-annotations: below
+    highlight-style: arrow
+    geometry:
+      - paperwidth=6.5in
+      - paperheight=9in
+      - top=0.9in
+      - bottom=0.9in
+      - inner=0.9in
+      - outer=0.7in
+    include-in-header:
+      text: |
+        \usepackage{fontspec}
+        \setmonofont{DejaVu Sans Mono}[Scale=0.9]
+
+bibliography: references.bib
+csl: https://www.zotero.org/styles/apa
+
+execute:
+  freeze: auto
+  echo: true
+  warning: false
+  message: false
+
+knitr:
+  opts_chunk:
+    comment: '#>'
+    collapse: true
+    fig.retina: 2
+    dpi: 150

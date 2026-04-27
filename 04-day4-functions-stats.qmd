@@ -1,0 +1,70 @@
+# Day 4: Functions, Control Flow, Applied Statistics {#sec-day4}
+
+## Learning objectives
+
+By the end of this day you should be able to:
+
+- Write a small R function with named arguments,
+  defaults, and a single return value.
+- Use `if`/`else` and `purrr::map` (in preference to
+  explicit loops) for control flow.
+- Compute summary statistics with `summary()`,
+  `mean()`, `sd()`, `median()`, `quantile()`.
+- Run a two-sample `t.test()` and a `chisq.test()` and
+  interpret the output.
+- Fit a simple linear regression with `lm()` and
+  interpret the coefficients, residuals, and the
+  `summary()` output.
+
+## Lecture
+
+(TODO: ~1 hour of lecture content covering:)
+
+- Anatomy of a function: arguments, body, return value
+- `if`/`else`
+- `purrr::map` and friends
+- Summary statistics
+- `t.test`, `chisq.test`
+- `lm()` and reading its output
+
+## Worked example: exploratory analysis end to end
+
+(TODO: Take yesterday's dataset, write a function that
+computes a custom summary statistic, run a t-test
+comparing two groups, fit a linear regression with one
+predictor, interpret the result.)
+
+## Homework
+
+1. (TODO) Write three functions:
+   - One that takes a numeric vector and returns its
+     coefficient of variation.
+   - One that takes a 2x2 contingency table and returns
+     the odds ratio.
+   - One that takes a vector of p-values and returns
+     the Bonferroni-corrected p-values.
+2. (TODO) Run a two-sample t-test on a specified
+   comparison from the dataset. Report the test
+   statistic, p-value, and confidence interval. State
+   the conclusion in one sentence.
+3. (TODO) Run a chi-squared test on a specified 2x2
+   table. Report the test statistic, p-value, and the
+   expected counts. Comment on whether Fisher's exact
+   would have been more appropriate and why.
+4. (TODO) Fit a simple linear regression of one
+   continuous outcome on one continuous predictor.
+   Interpret the slope coefficient in plain English,
+   in the units of the original variables.
+5. (TODO) Interpret the residual standard error and
+   $R^2$ from your regression in question 4.
+
+## Solutions
+
+(TODO)
+
+## What's next
+
+Day 5 closes the boot camp with reproducibility
+(Quarto, Git basics) and a primer on using AI
+assistance responsibly. After Day 5 the four companion
+volumes pick up where the boot camp leaves off.

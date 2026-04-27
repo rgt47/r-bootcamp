@@ -1,0 +1,93 @@
+# Day 5: Reproducibility and AI Assistance {#sec-day5}
+
+## Learning objectives
+
+By the end of this day you should be able to:
+
+- Build a one-page Quarto report combining prose, R
+  code, and figures into a self-contained HTML or PDF.
+- Use RStudio Projects to keep an analysis self-contained
+  and portable.
+- Initialise a Git repository, commit changes, and view
+  the history through the RStudio IDE.
+- Use AI assistance (ChatGPT, Claude) responsibly:
+  recognise the failure modes, verify generated code
+  before trusting it, and document the AI's involvement.
+- Find the right companion volume for any topic that
+  goes beyond the boot camp.
+
+## Lecture
+
+(TODO: ~1 hour of lecture content covering:)
+
+- Quarto in one paragraph: prose + code + output in a
+  single document.
+- A minimum viable Quarto report.
+- RStudio Projects: why they matter.
+- Git through the IDE: the four operations a beginner
+  needs (status, add, commit, history).
+- AI assistance: when to use, when not to use,
+  verification before trusting.
+- The four companion volumes and where each picks up.
+
+## Worked example: a one-page Quarto report
+
+(TODO: Build a one-page Quarto report from yesterday's
+analysis. Include a brief prose introduction, the data
+import and analysis code, a figure, a table, and a
+short conclusion. Render to HTML. Place it in a Git
+repository and commit.)
+
+## Homework
+
+1. (TODO) Build a one-page Quarto report from your
+   own analysis from Day 4. Render to HTML.
+2. (TODO) Initialise a Git repository for the report,
+   commit it, and add a README explaining the
+   analysis. Push to a private GitHub repository.
+3. (TODO) Use an AI tool (ChatGPT, Claude, or
+   similar) to suggest improvements to your Day-4
+   analysis code. Verify the suggestions by running
+   them. Document one suggestion that improved your
+   code and one that was wrong, with explanation of
+   how you identified each.
+4. (TODO) Read the table-of-contents page of one of
+   the four companion volumes and identify two topics
+   you expect to encounter in your first quarter of
+   graduate study.
+5. (TODO) Write a one-paragraph reflection on what
+   you most need to practice in the first month of
+   the academic programme.
+
+## Solutions
+
+(TODO)
+
+## What's next: the four companion volumes
+
+The boot camp ends here. The next thread of the
+curriculum picks up in one of four companion volumes,
+depending on what your programme requires next:
+
+- **Reproducibility infrastructure** (Git in depth,
+  Docker, renv, Quarto book authoring, CDISC, SAS,
+  AI-assisted coding): *Biostatistics Practicum*.
+- **Statistical methods and computing** (linear models,
+  GLM, mixed models, survival, Bayesian computation,
+  simulation, bootstrap, ggplot2 advanced, Shiny,
+  parallel R, packages): *Statistical Computing in
+  the Age of AI*.
+- **Applied methodological core** (causal inference,
+  longitudinal at depth, survival applied, clinical
+  trials, missing data, meta-analysis, advanced
+  categorical): *Applied Statistical Methods for
+  Public Health*.
+- **Generative AI integration** (RAG, agents,
+  evaluation, regulation, deployment): *Applied
+  Generative AI for Public Health and Biostatistics*.
+
+The advanced computing volume (*Advanced Statistical
+Computing in the Age of AI*) is the natural follow-on
+to the introductory SCAI volume; it covers numerical
+stability, MCMC depth, HPC, high-dimensional methods,
+ML, software engineering, and advanced visualisation.

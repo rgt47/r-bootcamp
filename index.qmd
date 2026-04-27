@@ -1,0 +1,47 @@
+# Welcome {.unnumbered}
+
+This is the online version of **R for Biostatistics: A
+One-Week Boot Camp** by Ronald 'Ryy' G. Thomas, a short
+preparatory course for incoming graduate students in
+biostatistics and adjacent programmes.
+
+The book covers everything an entering masters-level
+biostatistician needs to be functional in R on day one of
+the academic programme: installation, basic syntax, data
+manipulation with the tidyverse, visualisation with
+ggplot2, simple statistics, and the minimum viable
+reproducibility setup. It is designed for **five
+consecutive days** of work: one hour of lecture content
+each day, two hours of homework, no examinations.
+
+The boot camp is the entry point to a five-volume graduate
+sequence:
+
+- **R for Biostatistics: A One-Week Boot Camp** (this
+  volume) — pre-program preparation.
+- [*Biostatistics Practicum*](https://rgtlab.org/practicum)
+  — workflow infrastructure (Git, Docker, renv, Quarto,
+  CDISC).
+- [*Statistical Computing in the Age of AI*](https://scai.rgtlab.org)
+  — introductory methods (linear models, GLM, mixed
+  models, survival, Bayesian, bootstrap, simulation).
+- [*Advanced Statistical Computing in the Age of AI*](https://scai-advanced.rgtlab.org)
+  — advanced computing (numerical stability, MCMC, HPC,
+  high-dimensional methods, ML, software engineering).
+- [*Applied Generative AI for Public Health and Biostatistics*](https://applied-genai.rgtlab.org)
+  — capability classes, RAG, agents, evaluation,
+  regulation, deployment.
+
+See the [Preface](preface.qmd) for the design rationale
+and the [Conventions](conventions.qmd) page for visual
+cues.
+
+## License
+
+This book is licensed under
+[Creative Commons
+Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+
+Code samples are licensed under
+[Creative Commons CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/),
+i.e. public domain.

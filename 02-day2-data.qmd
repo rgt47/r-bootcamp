@@ -1,0 +1,62 @@
+# Day 2: Data Import and Manipulation {#sec-day2}
+
+## Learning objectives
+
+By the end of this day you should be able to:
+
+- Read a CSV or Excel file into R as a tibble.
+- Distinguish a tibble from a base-R data frame and know
+  when the difference matters.
+- Apply the six core `dplyr` verbs: `filter`, `select`,
+  `mutate`, `summarise`, `arrange`, `group_by`.
+- Chain operations using the native pipe `|>`.
+- Join two tables on a shared key (`left_join`,
+  `inner_join`).
+
+## Lecture
+
+(TODO: ~1 hour of lecture content covering:)
+
+- Tidy data: one row per observation, one column per
+  variable
+- Reading CSV with `readr::read_csv()`
+- Reading Excel with `readxl::read_excel()`
+- Tibbles vs. data frames
+- The six dplyr verbs
+- The native pipe `|>`
+- Joining tables
+
+## Worked example: NHANES-style cohort wrangling
+
+(TODO: A worked example using a small public-health
+dataset, e.g., a NHANES subset, showing the day's verbs
+end to end: import, filter to the subset of interest,
+select relevant columns, compute derived variables,
+group and summarise, save the result.)
+
+## Homework
+
+1. (TODO) Download a small public-health dataset
+   (specified in the worked example) and read it into R.
+2. (TODO) Filter to a specified sub-cohort (e.g., adults
+   over 40 with a particular condition) and report the
+   sample size.
+3. (TODO) Compute summary statistics by group: mean
+   age, mean BMI, count of cases, by sex.
+4. (TODO) Join two tables to add a covariate from a
+   second source. Verify the join did what you
+   expected.
+5. (TODO) Identify three rows in the dataset with
+   anomalous values (e.g., implausible ages or
+   measurements). Explain what the anomaly is and how
+   you would handle it.
+
+## Solutions
+
+(TODO)
+
+## What's next
+
+Day 3 covers visualisation with `ggplot2`. We will use
+the dataset from Day 2's worked example, so save your
+processed data file at the end of Day 2.

@@ -1,0 +1,59 @@
+# Day 3: Visualisation with ggplot2 {#sec-day3}
+
+## Learning objectives
+
+By the end of this day you should be able to:
+
+- Build a `ggplot2` figure from scratch using the grammar
+  of graphics: data, aesthetics, geoms.
+- Choose the right geom for the data (`geom_point`,
+  `geom_line`, `geom_bar`, `geom_histogram`,
+  `geom_boxplot`).
+- Customise scales, labels, and themes.
+- Use `facet_wrap` to produce small multiples.
+- Save figures as PNG and PDF at appropriate dimensions.
+
+## Lecture
+
+(TODO: ~1 hour of lecture content covering:)
+
+- The grammar of graphics in one paragraph
+- `ggplot(data, aes(...))` + geoms
+- The most common geoms
+- Scales: continuous, discrete, log, colour
+- Labels and themes
+- Facets
+- Saving with `ggsave()`
+
+## Worked example: figures from yesterday's analysis
+
+(TODO: Produce three figures from yesterday's wrangled
+dataset: a histogram of age, a scatter of BMI vs. some
+biomarker coloured by sex, a faceted bar chart of
+prevalence by group.)
+
+## Homework
+
+1. (TODO) Recreate four published figures from the
+   specifications provided. The original publication
+   reference is given for each.
+2. (TODO) Plot a continuous variable on a log scale and
+   explain when this is appropriate.
+3. (TODO) Customise a figure with a journal-style theme
+   (no grid, larger axis fonts, specified colour
+   palette).
+4. (TODO) Produce a faceted figure showing the same
+   relationship across three groups. Comment on what
+   the facets reveal.
+5. (TODO) Save all your figures as both PNG (for screen)
+   and PDF (for print).
+
+## Solutions
+
+(TODO)
+
+## What's next
+
+Day 4 covers writing functions, control flow, and basic
+applied statistics. We will revisit yesterday's dataset
+and run statistical tests on it.

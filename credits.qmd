@@ -1,0 +1,31 @@
+# Credits {.unnumbered}
+
+The chapter list was constructed by surveying 12
+publicly-available syllabi from major US biostatistics
+programmes (documented in `docs/syllabi-survey.md`) and
+adopting the topics that appeared in three or more of them.
+
+The chapter template (Learning objectives → Orientation →
+Statistician's contribution → content with
+Check-your-understanding callouts → Collaborating with an
+LLM → Exercises → Further reading) follows the structure
+established in the companion volumes
+*Statistical Computing in the Age of AI* and
+*Biostatistics Practicum*.
+
+Visual design, the two-zone Springer-style cover, the
+SCSS theme, the navigation toggle, is shared across all
+three books in the series, with palette differentiation
+per volume.
+
+Cover artwork generated procedurally by the Python script
+at `images/build-cover.py`. Watercolour palette: deep wine
+through plum and rose to warm amber, anchored on the
+brand burgundy `#7a2c4e`. Typography: Avenir family
+(Apple system font); body text in Source Serif 4.
+
+Acknowledgements to the authors of *R for Data Science*,
+*Advanced R*, *R Packages*, *Bayesian Data Analysis*,
+*Statistical Rethinking*, and the Posit and tidyverse
+communities, whose published work and toolchain make the
+modern R-based statistical book possible.

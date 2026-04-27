@@ -1,0 +1,89 @@
+# Conventions {.unnumbered}
+
+This page summarises the visual conventions used
+throughout the book.
+
+## Code
+
+R code appears in syntax-highlighted blocks. Output is
+prefixed with `#>` to make the boundary between input and
+output explicit:
+
+```r
+mean(c(1, 2, 3, 4, 5))
+#> [1] 3
+```
+
+Inline code is in `monospace`. Function calls always
+include parentheses (`mean()` rather than `mean`) so that
+they are unambiguously functions. Package-qualified calls
+(`dplyr::filter`) appear when the function is not
+universally known, when there is name-collision risk, or
+when the chapter is teaching package usage.
+
+## Callouts
+
+Three callout types appear:
+
+::: {.callout-tip}
+## Tip
+
+A small practical recommendation.
+:::
+
+::: {.callout-note icon=false collapse=true}
+## Check your understanding: example
+
+A short question testing comprehension of the just-read
+material. Click to expand the answer.
+:::
+
+::: {.callout-warning}
+## Warning
+
+A pitfall the reader may otherwise hit.
+:::
+
+## Cross-references
+
+Within this book, sections, figures, and tables are
+referenced by their Quarto label
+(`@sec-monte-carlo-human`, `@fig-mcmc-trace`,
+`@tbl-comparison`). These resolve to clickable links in
+HTML and proper figure/table numbers in PDF.
+
+References to the companion volumes
+*Statistical Computing in the Age of AI* and
+*Biostatistics Practicum* use **prose pointers** rather
+than Quarto cross-references, because cross-references do
+not resolve across separate books. For example: 'see the
+Optimisation chapter of the companion *Statistical
+Computing in the Age of AI* volume'.
+
+## Mathematical notation
+
+Conventional notation throughout. Vectors are bold
+lower-case ($\mathbf{x}$); matrices are bold upper-case
+($\mathbf{X}$); scalars and parameters are non-bold.
+Estimators carry hats ($\hat\theta$). Sample size is $n$;
+parameter dimension is $p$.
+
+## Chapter structure
+
+Every content chapter follows the same template:
+
+1. **Learning objectives.** What you will be able to do
+   after reading.
+2. **Orientation.** A short prose framing.
+3. **The statistician's contribution.** What no tool can
+   automate. The judgements at the centre of the chapter.
+4. **Content sections** with **Check-your-understanding**
+   callouts at natural pauses.
+5. **Collaborating with an LLM on the chapter topic.**
+   Prompt / Watch for / Verification triples for AI
+   assistance.
+6. **Exercises.** The work.
+7. **Further reading.** Where to go next on the topic.
+
+The pattern repeats deliberately. By the third chapter
+you know where to find each component.
