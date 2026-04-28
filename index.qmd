@@ -30,7 +30,7 @@ sequence:
 - [*Advanced Statistical Computing in the Age of AI*](https://scai-advanced.rgtlab.org)
   — advanced computing (numerical stability, MCMC, HPC,
   high-dimensional methods, ML, software engineering).
-- [*Applied Generative AI for Public Health and Biostatistics*](https://applied-genai.rgtlab.org)
+- [*Applied Generative AI for Health Sciences Research*](https://applied-genai.rgtlab.org)
   — capability classes, RAG, agents, evaluation,
   regulation, deployment.
 

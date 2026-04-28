@@ -61,7 +61,7 @@ nearly everything beyond the entry-level basics:
   Biostatistics*.
 - Causal inference, longitudinal analysis, clinical
   trial design, missing-data depth. See
-  *Applied Statistical Methods for Public Health*.
+  *Applied Statistical Methods for Health Sciences Research*.
 
 The boot camp is intentionally narrow. The student
 finishes Day 5 and proceeds to the methods courses with
