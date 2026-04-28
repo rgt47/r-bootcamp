@@ -1,7 +1,7 @@
 # Copyright {.unnumbered}
 
-*Advanced Statistical Computing in the Age of AI* by
-Ronald 'Ryy' G. Thomas is licensed under a
+*R for Biostatistics: A One-Week Boot Camp* by Ronald 'Ryy'
+G. Thomas is licensed under a
 [Creative Commons Attribution-NonCommercial-NoDerivatives
 4.0 International
 License](https://creativecommons.org/licenses/by-nc-nd/4.0/).
@@ -13,6 +13,14 @@ i.e. the public domain.
 
 To cite this book, please use:
 
-> Thomas, R. G. (2026). *Advanced Statistical Computing in the
-> Age of AI*. Available at
-> <https://scai-advanced.rgtlab.org>.
+> Thomas, R. G. (2026). *R for Biostatistics: A One-Week
+> Boot Camp*. Available at
+> <https://r-bootcamp.rgtlab.org>.
+
+::: {.content-visible when-format='pdf'}
+```{=latex}
+\clearpage
+\tableofcontents
+\clearpage
+```
+:::

@@ -1,4 +1,6 @@
-# Welcome {.unnumbered}
+# Welcome {.unnumbered .unlisted}
+
+::: {.content-visible when-format='html'}
 
 This is the online version of **R for Biostatistics: A
 One-Week Boot Camp** by The rgtlab Curriculum Project, a short
@@ -45,3 +47,5 @@ Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommo
 Code samples are licensed under
 [Creative Commons CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/),
 i.e. public domain.
+
+:::
