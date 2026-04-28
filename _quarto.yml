@@ -5,7 +5,7 @@ project:
 book:
   title: 'R for Biostatistics'
   subtitle: 'A One-Week Boot Camp for incoming graduate students'
-  author: 'Ronald "Ryy" G. Thomas'
+  author: 'The rgtlab Curriculum Project'
   date: today
   date-format: 'YYYY-MM-DD'
 

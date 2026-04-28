@@ -1,7 +1,7 @@
 # Welcome {.unnumbered}
 
 This is the online version of **R for Biostatistics: A
-One-Week Boot Camp** by Ronald 'Ryy' G. Thomas, a short
+One-Week Boot Camp** by The rgtlab Curriculum Project, a short
 preparatory course for incoming graduate students in
 biostatistics and adjacent programmes.
 
