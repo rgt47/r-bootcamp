@@ -1,16 +1,3 @@
-# R for Biostatistics {.unnumbered}
+# R for Biostatistics {.unnumbered .unlisted}
 
-::: {.content-visible when-format='pdf'}
-\thispagestyle{empty}
-\vspace*{4cm}
-\begin{center}
-{\Huge\bfseries R for Biostatistics\par}
-\vspace{1cm}
-{\Large\itshape A One-Week Boot Camp for incoming graduate students\par}
-\end{center}
-\newpage
-:::
-
-::: {.content-visible when-format='html'}
 *A One-Week Boot Camp for incoming graduate students.*
-:::
