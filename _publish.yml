@@ -1,0 +1,4 @@
+- source: project
+  netlify:
+    - id: 59d0968a-db76-455d-af68-6e1ac4218907
+      url: https://fancy-crepe-2a51e0.netlify.app
