@@ -1,0 +1,13 @@
+[build]
+  publish = "_book"
+  command = "quarto render"
+
+[build.environment]
+  QUARTO_VERSION = "1.5.57"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
