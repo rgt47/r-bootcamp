@@ -1,7 +1,8 @@
 # How to use this book {.unnumbered}
 
-This short orientation chapter explains the daily cadence,
-the chapter template, and the conventions used throughout.
+We begin with a short orientation. In this chapter we set out
+the daily cadence, the chapter template, and the conventions
+used throughout, so that the reader knows what to expect.
 
 ## The daily cadence
 
@@ -16,14 +17,16 @@ Each day has the same shape:
   problem before checking the solution.
 
 The cadence assumes one chapter per day for five
-consecutive days. The boot camp can be compressed (two
+consecutive days. The boot camp may be compressed (two
 chapters per day across two-and-a-half days) or expanded
 (one chapter per week across a month) depending on the
-student's other commitments.
+student's other commitments; we leave the choice to the
+reader, since it depends somewhat on one's other obligations.
 
 ## Chapter template
 
-Each chapter follows a five-section template:
+Each chapter follows a five-section template, and we shall
+keep to it consistently:
 
 1. **Learning objectives.** A bulleted list of what the
    student should be able to do by the end of the day.
@@ -35,14 +38,16 @@ Each chapter follows a five-section template:
 5. **Solutions.** Worked solutions to all homework
    problems. Read only after attempting the problem.
 
-There are no quizzes, no examinations, and no tests in
-this book. Self-assessment is via the homework solutions.
+We note that there are no quizzes, no examinations, and no
+tests in this book. That is, self-assessment proceeds
+entirely through the homework solutions.
 
 ## Conventions
 
-Visual cues used throughout the book are described on the
-[Conventions](conventions.qmd) page. The book is R-first;
-the style follows tidyverse conventions:
+The visual cues used throughout the book are described on the
+[Conventions](conventions.qmd) page. This book is R-first;
+the style follows tidyverse conventions, which we have found
+to be relatively straightforward to read:
 
 - The native pipe `|>` is used throughout (not `%>%`).
 - Assignment uses `<-` (not `=`).
@@ -51,16 +56,17 @@ the style follows tidyverse conventions:
 
 ## Companion volumes
 
-After the boot camp, the four follow-on volumes are at:
+After the boot camp, the reader may wish to continue; the
+four follow-on volumes are at:
 
-- *Biostatistics Practicum* —
-  <https://rgtlab.org/practicum>
-- *Statistical Computing in the Age of AI* —
-  <https://scai.rgtlab.org>
-- *Advanced Statistical Computing in the Age of AI* —
-  <https://scai-advanced.rgtlab.org>
+- *Biostatistics Practicum*
+  (<https://rgtlab.org/practicum>)
+- *Statistical Computing in the Age of AI*
+  (<https://scai.rgtlab.org>)
+- *Advanced Statistical Computing in the Age of AI*
+  (<https://scai-advanced.rgtlab.org>)
 - *Applied Generative AI for Public Health and
-  Biostatistics* — <https://applied-genai.rgtlab.org>
+  Biostatistics* (<https://applied-genai.rgtlab.org>)
 
 The end of Chapter 5 lists which companion volume picks
 up which thread.
