@@ -6,9 +6,9 @@ with code blocks set in [JetBrains
 Mono](https://www.jetbrains.com/lp/mono/). Source code is
 in R 4.4 or later.
 
-The book is hosted at <https://scai-advanced.rgtlab.org>
+The book is hosted at <https://r-bootcamp.rgtlab.org>
 on Netlify, with continuous deployment via GitHub Actions
-from the `rgt47/scai-advanced` repository on every push to
+from the `rgt47/r-bootcamp` repository on every push to
 `main`. The deployment recipe is in `HOSTING.md`.
 
 The cover is generated procedurally by
