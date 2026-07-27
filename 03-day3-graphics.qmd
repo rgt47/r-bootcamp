@@ -1,4 +1,4 @@
-# Day 3: Visualisation with ggplot2 {#sec-day3}
+# Day 3: Visualization with ggplot2 {#sec-day3}
 
 ## Learning objectives
 
@@ -29,14 +29,14 @@ optional ones:
 
 - **data**: a tibble or data frame.
 - **aesthetic mapping**: which columns map to which
-  visual channels (x, y, colour, shape, size).
+  visual channels (x, y, color, shape, size).
 - **geom**: the geometric form (point, line, bar,
   histogram, boxplot).
 
 Plus optional:
 
 - **scales**: how aesthetic values map to visual values
-  (continuous to log, categorical to a colour palette).
+  (continuous to log, categorical to a color palette).
 - **facets**: a small-multiples grid by some categorical
   variable.
 - **theme**: non-data ink (axes, grid, fonts).
@@ -101,7 +101,7 @@ ggplot(daily_admits, aes(x = date, y = n_admissions)) +
 
 **`geom_smooth`** adds a smoother. The default method
 depends on sample size: LOESS for n < 1000, `gam` (a
-generalised additive model) for larger samples. Use
+generalized additive model) for larger samples. Use
 `method = "lm"` for a linear fit, or specify any other
 method explicitly:
 
@@ -134,7 +134,7 @@ ggplot(cohort, aes(x = age, y = sbp, colour = sex)) +
 ```
 
 When you see strange figures (a single hue ramp where
-you expected discrete colours, an alpha legend you did
+you expected discrete colors, an alpha legend you did
 not ask for), it is usually `aes()`-vs.-not confusion.
 
 ### Scales
@@ -147,7 +147,7 @@ ggplot(cohort, aes(x = bmi, y = fasting_glucose)) +
   scale_y_log10()                       # log y axis
 ```
 
-For colour:
+For color:
 
 ```r
 ggplot(cohort, aes(x = age, y = sbp, colour = bmi)) +
@@ -155,7 +155,7 @@ ggplot(cohort, aes(x = age, y = sbp, colour = bmi)) +
   scale_colour_viridis_c()              # continuous viridis
 ```
 
-For categorical colour, the default is fine for a few
+For categorical color, the default is fine for a few
 levels; for more, `scale_colour_brewer()` and
 `scale_colour_manual()` give control.
 
@@ -174,7 +174,7 @@ ggplot(cohort, aes(x = age, y = sbp, colour = sex)) +
   theme_minimal(base_size = 12)
 ```
 
-`theme_minimal()` strips the default grey background.
+`theme_minimal()` strips the default gray background.
 Other themes: `theme_bw()`, `theme_classic()`,
 `theme_void()`. The `base_size` sets the default font
 size.
@@ -220,7 +220,7 @@ save time so the figure does not need rescaling.
 ## Worked example: figures from yesterday's analysis
 
 Take yesterday's `cohort` and produce three figures: a
-histogram of age, a coloured scatter of SBP vs. BMI, a
+histogram of age, a colored scatter of SBP vs. BMI, a
 faceted comparison of fasting glucose by age group.
 
 ```r
@@ -273,7 +273,7 @@ These three figures together would make a respectable
        'BMI distribution'.
 
    (b) Scatter of `fasting_glucose` (y) vs. `bmi` (x),
-       coloured by `diabetic`, with a linear smoother
+       colored by `diabetic`, with a linear smoother
        per group, log-scaled y-axis.
 
    (c) Boxplot of `sbp` by `age_group` faceted by `sex`.
@@ -288,9 +288,9 @@ These three figures together would make a respectable
 
 3. **Journal theme.** Customise figure 1(b) with a
    journal-style theme: white background, grid only on
-   the y-axis, larger axis font, a specified colour
-   palette (e.g., `scale_colour_manual(values = c("FALSE"
-   = "grey50", "TRUE" = "firebrick"))`).
+   the y-axis, larger axis font, a specified color
+   palette (e.g., `scale_color_manual(values = c("FALSE"
+   = "gray50", "TRUE" = "firebrick"))`).
 
 4. **Faceted comparison.** Plot the relationship between
    `sbp` (y) and `bmi` (x) with `geom_point` plus
@@ -349,7 +349,7 @@ y-values as-is rather than counting).
 **Problem 2.** The log scale changes what you see when
 the underlying distribution is right-skewed (typical for
 fasting glucose and most lab values). The log axis
-linearises a multiplicative relationship; differences at
+linearizes a multiplicative relationship; differences at
 the high end appear less compressed.
 
 **Problem 3.**

@@ -12,7 +12,7 @@ from the `rgt47/r-bootcamp` repository on every push to
 `main`. The deployment recipe is in `HOSTING.md`.
 
 The cover is generated procedurally by
-`images/build-cover.py` from a watercolour gradient
+`images/build-cover.py` from a watercolor gradient
 anchored on `#7a2c4e` (the volume's brand burgundy) and
 overlaid with Avenir typography. Re-running the script
 regenerates the cover; the procedural approach makes the

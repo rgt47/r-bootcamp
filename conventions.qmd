@@ -1,6 +1,6 @@
 # Conventions {.unnumbered}
 
-This page summarises the visual conventions used
+This page summarizes the visual conventions used
 throughout the book.
 
 ## Code
@@ -57,7 +57,7 @@ References to the companion volumes
 *Biostatistics Practicum* use **prose pointers** rather
 than Quarto cross-references, because cross-references do
 not resolve across separate books. For example: 'see the
-Optimisation chapter of the companion *Statistical
+Optimization chapter of the companion *Statistical
 Computing in the Age of AI* volume'.
 
 ## Mathematical notation
@@ -76,7 +76,7 @@ Every content chapter follows the same template:
    after reading.
 2. **Orientation.** A short prose framing.
 3. **The statistician's contribution.** What no tool can
-   automate. The judgements at the centre of the chapter.
+   automate. The judgments at the center of the chapter.
 4. **Content sections** with **Check-your-understanding**
    callouts at natural pauses.
 5. **Collaborating with an LLM on the chapter topic.**

@@ -8,11 +8,11 @@ By the end of this day you should be able to:
 - Distinguish the console (interactive) from a script
   (saved code).
 - Create and assign variables; perform arithmetic.
-- Recognise and work with R's core data types: numeric,
+- Recognize and work with R's core data types: numeric,
   integer, character, logical, factor.
 - Index vectors by position, by name, and by logical
   condition.
-- Recognise missing values (`NA`) and avoid the common
+- Recognize missing values (`NA`) and avoid the common
   pitfalls.
 
 ## Lecture
@@ -64,7 +64,7 @@ prompt (`>`). Type:
 ```
 
 R evaluated `2 + 2` and printed `4`. The `[1]` means 'the
-first element of the result is printed here' — which
+first element of the result is printed here', which
 matters when results have many elements.
 
 The arithmetic operators are what you expect: `+`, `-`,
@@ -130,7 +130,7 @@ range(ages)
 #> [1] 19 62
 ```
 
-This vectorised behaviour is the single most important
+This vectorized behavior is the single most important
 idiom in R. You almost never write loops to apply an
 operation element-by-element; R does it for you.
 
@@ -153,7 +153,7 @@ typeof(factor(c("low", "high")))   # factor
 ```
 
 A **factor** is R's way of representing a categorical
-variable. Internally it is an integer with a labelling.
+variable. Internally it is an integer with a labeling.
 You will encounter factors immediately when reading data;
 treat them as categorical for now.
 

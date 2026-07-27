@@ -34,7 +34,7 @@ keep to it consistently:
    inline examples to run.
 3. **Worked example.** A small but realistic biomedical
    example that uses the day's content end to end.
-4. **Homework.** Problems organised from easier to harder.
+4. **Homework.** Problems organized from easier to harder.
 5. **Solutions.** Worked solutions to all homework
    problems. Read only after attempting the problem.
 

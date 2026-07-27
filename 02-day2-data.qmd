@@ -67,7 +67,7 @@ library(tidyverse)
 patients <- read_csv("data/patients.csv")
 ```
 
-`read_csv()` returns a **tibble** — a modern data frame.
+`read_csv()` returns a **tibble**, a modern data frame.
 It prints nicely (only the first 10 rows; columns flagged
 by type), and it does not convert characters to factors.
 (Base R's `read.csv()` had `stringsAsFactors = TRUE` as
@@ -238,7 +238,7 @@ combined <- patients |>
 
 Each patient in `patients` may have multiple lab visits in
 `labs`; the result has one row per (patient, visit) pair.
-If you want one row per patient, summarise the labs
+If you want one row per patient, summarize the labs
 before joining:
 
 ```r
@@ -258,7 +258,7 @@ Other joins:
   swapped; rarely used.
 - `full_join()` keeps all IDs from either table.
 - `anti_join()` keeps left-table rows that have no match
-  in the right table — useful for finding data-quality
+  in the right table, useful for finding data-quality
   problems.
 
 Always check the row count before and after a join. A
@@ -275,7 +275,7 @@ to join on multiple columns.
 
 The data: a synthetic NHANES-style file with 500 adults,
 columns `id`, `age`, `sex`, `race`, `bmi`, `sbp`,
-`fasting_glucose`. The objective: characterise the
+`fasting_glucose`. The objective: characterize the
 cohort, identify the diabetic subgroup, compare blood
 pressure across age groups stratified by sex.
 
@@ -337,8 +337,8 @@ nhanes |>
 ```
 
 The pipeline is six lines of code that produces a publishable
-descriptive table. The pattern — read, glimpse, mutate-derived,
-group, summarise — is the rhythm you will use every day.
+descriptive table. The pattern (read, glimpse, mutate-derived,
+group, summarize) is the rhythm you will use every day.
 
 ## Homework
 
@@ -450,6 +450,6 @@ all bias the result; documented handling does not.
 
 ## What's next
 
-Day 3 covers visualisation with `ggplot2`. We will use
+Day 3 covers visualization with `ggplot2`. We will use
 the cohort dataset from Day 2's worked example, so save
 your processed `cohort` object at the end of Day 2.

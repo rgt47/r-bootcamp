@@ -1,4 +1,6 @@
 project:
+  pre-render:
+    - tools/us-spelling
   type: book
   output-dir: _book
 

@@ -18,7 +18,7 @@ By the end of this day you should be able to:
 
 ## Lecture
 
-Day 4 takes you from 'I can read and visualise data' to
+Day 4 takes you from 'I can read and visualize data' to
 'I can compute statistics on it'. The four ideas are:
 write a function for anything you do more than once;
 prefer `purrr::map` over explicit loops; know the basic
@@ -71,7 +71,7 @@ deliberate about defaults; they affect the answer.
 ::: {.callout-note}
 The rule of thumb: write a function the third time you
 copy-paste a piece of code. Earlier than that and you
-spend more time generalising than the duplication
+spend more time generalizing than the duplication
 costs.
 :::
 
@@ -138,7 +138,7 @@ numeric vector (`map` returns a list; `map_dbl`,
 For most applied biostatistics, the equivalent operation
 inside `dplyr` is `group_by` + `summarise`. Reach for
 `map` when working with lists of model fits, lists of
-files, lists of countries — anything that is genuinely
+files, lists of countries, anything that is genuinely
 list-shaped rather than tabular.
 
 ### Summary statistics
@@ -327,7 +327,7 @@ volume's chapter on causal inference treats this carefully.
 
 ## Worked example: an end-to-end exploratory analysis
 
-Load the cohort, write a small function to summarise a
+Load the cohort, write a small function to summarize a
 lab value, run a t-test on a sex difference, fit a
 linear regression of SBP on age and BMI.
 

@@ -1,0 +1,337 @@
+#!/usr/bin/env python3
+"""us-spelling: detect and fix British spelling in Quarto/RMarkdown prose.
+
+Usage:
+  us-spelling check [PATH ...]     report genuine British prose; exit 1 if any
+  us-spelling fix   [PATH ...]     rewrite British -> US in prose (safe)
+  us-spelling fix --force [PATH]   also convert capitalized mid-sentence words
+
+With no arguments it runs `check` on QUARTO_PROJECT_DIR (or the current
+directory), which makes it usable as a Quarto `pre-render` gate.
+
+Design notes (learned the hard way):
+  * Only PROSE is touched. Fenced code, inline code, and $math$ are left
+    verbatim; caption directives (#| fig-cap: etc.) are treated as prose.
+  * British -ise verbs are converted from a WHITELIST, so American words
+    that legitimately end in -ise (exercise, revise, raise, advise,
+    promise, compromise, ...) are never corrupted.
+  * Words identical in US English (characteristic, optimistic,
+    programmer, analyses) are left alone.
+  * .bib files are NOT processed: a bibliography reproduces titles as
+    published.
+"""
+import re, sys, os, glob, tempfile, shutil
+
+# --- words identical in US English: never touch -------------------------
+SKIP = {
+    'optimistic', 'realistic', 'characteristic', 'characteristics',
+    'hypothesis', 'emphasis', 'analyses', 'specialists', 'specialist',
+    'analysis', 'basis', 'thesis', 'genesis', 'oasis', 'crisis',
+    'exercise', 'advertise', 'compromise', 'surprise', 'comprise',
+    'rise', 'wise', 'arise', 'supervise', 'improvise', 'franchise',
+    'merchandise', 'revise', 'devise', 'precise', 'concise', 'promise',
+    'premise', 'expertise', 'paradise', 'otherwise', 'likewise',
+    'disguise', 'enterprise', 'noise', 'raise', 'praise', 'poise',
+    'clockwise', 'stepwise', 'pairwise', 'piecewise', 'demise',
+}
+
+OUR = {'behaviour', 'colour', 'favour', 'honour', 'labour', 'neighbour',
+       'flavour', 'rumour', 'odour', 'vapour', 'endeavour', 'misbehaviour',
+       'valour', 'candour', 'clamour', 'fervour', 'harbour', 'saviour',
+       'splendour', 'vigour', 'tumour', 'humour'}
+RE_ = {'centre', 'litre', 'metre', 'fibre', 'calibre', 'theatre', 'spectre',
+       'sombre', 'lustre', 'meagre', 'sceptre'}
+
+MISC = {
+    'defence': 'defense', 'offence': 'offense', 'licence': 'license',
+    'licences': 'licenses', 'programme': 'program', 'programmes': 'programs',
+    'cheque': 'check', 'cheques': 'checks', 'catalogue': 'catalog',
+    'manoeuvre': 'maneuver', 'manoeuvring': 'maneuvering',
+    'aluminium': 'aluminum', 'grey': 'gray', 'greyscale': 'grayscale',
+    'whilst': 'while', 'amongst': 'among', 'learnt': 'learned',
+    'spelt': 'spelled', 'burnt': 'burned', 'modelling': 'modeling',
+    'modelled': 'modeled', 'labelling': 'labeling', 'labelled': 'labeled',
+    'signalling': 'signaling', 'travelling': 'traveling',
+    'cancelled': 'canceled', 'cancelling': 'canceling', 'fuelled': 'fueled',
+    'totalling': 'totaling', 'marvelled': 'marveled',
+    'practise': 'practice', 'practised': 'practiced',
+    'practises': 'practices', 'practising': 'practicing',
+    'enrol': 'enroll', 'enrols': 'enrolls', 'enrolment': 'enrollment',
+    'enrolments': 'enrollments', 'fulfil': 'fulfill', 'fulfils': 'fulfills',
+    'fulfilment': 'fulfillment', 'fulfilments': 'fulfillments',
+    'instalment': 'installment', 'instalments': 'installments',
+    'instil': 'instill', 'distil': 'distill', 'skilful': 'skillful',
+    'wilful': 'willful', 'artefact': 'artifact', 'artefacts': 'artifacts',
+    'judgement': 'judgment', 'judgements': 'judgments',
+    'acknowledgement': 'acknowledgment',
+    'acknowledgements': 'acknowledgments', 'ageing': 'aging',
+    'storey': 'story', 'storeys': 'stories', 'mould': 'mold',
+    'moulds': 'molds', 'sulphur': 'sulfur', 'draught': 'draft',
+    'draughts': 'drafts', 'cypher': 'cipher', 'cyphers': 'ciphers',
+    'kerb': 'curb',
+}
+
+# --- whitelist of British -ise verbs that take American -ize ------------
+IZE = {
+  'recognise', 'organise', 'emphasise', 'minimise', 'maximise', 'optimise',
+  'summarise', 'characterise', 'generalise', 'normalise', 'standardise',
+  'formalise', 'decentralise', 'centralise', 'realise', 'specialise',
+  'memorise', 'hypothesise', 'anonymise', 'immunise', 'authorise',
+  'operationalise', 'utilise', 'visualise', 'categorise', 'randomise',
+  'tokenise', 'prioritise', 'familiarise', 'digitise', 'synchronise',
+  'systematise', 'legitimise', 'incentivise', 'monetise', 'capitalise',
+  'penalise', 'finalise', 'mobilise', 'stabilise', 'initialise',
+  'serialise', 'marginalise', 'colonise', 'sanitise', 'itemise',
+  'modernise', 'rationalise', 'neutralise', 'personalise', 'materialise',
+  'socialise', 'globalise', 'localise', 'pseudonymise', 'parametrise',
+  'discretise', 'amortise', 'collateralise', 'securitise', 'crystallise',
+  'equalise', 'industrialise', 'annualise', 'factorise', 'idealise',
+  'monopolise', 'anatomise', 'parallelise', 'stylise', 'apologise',
+  'jeopardise', 'popularise', 'commercialise', 'institutionalise',
+  'democratise', 'homogenise', 'productise', 'collectivise', 'privatise',
+  'nationalise', 'regularise', 'vectorise', 'linearise', 'orthogonalise',
+  'synthesise', 'theorise',
+}
+PFX = re.compile(r'^(un|dis|mis|re|non|over|under|inter|pre|co)')
+IZ_SUF = re.compile(
+    r'is(e|ed|es|ing|er|ers|ation|ations|ational|able|ably|ability)$', re.I)
+
+
+def _ize_form(w):
+    m = IZ_SUF.search(w.lower())
+    if not m:
+        return None
+    base = w.lower()[:m.start()] + 'ise'
+    stripped = re.sub(r'^(de|re|non|un|mis|pre|inter|over|under|co)-?',
+                      '', base)
+    if base not in IZE and stripped not in IZE:
+        return None
+    mm = IZ_SUF.search(w)
+    return w[:mm.start()] + 'iz' + w[mm.start() + 2:]
+
+
+def usize_word(w):
+    if w.endswith("'s") or w.endswith("’s"):
+        b = usize_word(w[:-2])
+        return b + w[-2:] if b else None
+    if '-' in w:
+        parts = [usize_word(p) or p for p in w.split('-')]
+        j = '-'.join(parts)
+        return j if j != w else None
+    lw = w.lower()
+    if lw in SKIP:
+        return None
+    if lw in MISC:
+        return MISC[lw]
+    if lw.startswith('sceptic'):
+        return 'sk' + w[2:]
+    for stem in OUR:
+        if stem in lw:
+            i = lw.rfind(stem)
+            return w[:i] + stem[:-3] + 'or' + w[i + len(stem):]
+    for stem in RE_:
+        if lw == stem or lw.startswith(stem) or lw.endswith(stem):
+            i = lw.rfind(stem)
+            return w[:i] + stem[:-2] + 'er' + w[i + len(stem):]
+    if re.search(r'lys(e|ed|ing)$', lw):
+        return re.sub(r'lys(e|ed|ing)$', r'lyz\1', w)
+    return _ize_form(w)
+
+
+def cap_match(orig, repl):
+    if orig.isupper():
+        return repl.upper()
+    if orig[:1].isupper():
+        return repl[:1].upper() + repl[1:]
+    return repl
+
+
+WORD = re.compile(r"[A-Za-z]+(?:['’-][A-Za-z]+)*")
+INLINE = re.compile(r'(`[^`]*`|\$\$.*?\$\$|\$[^$\n]*\$)', re.S)
+FENCE_LINE = re.compile(r'^\s*(```+|~~~+)')
+CAPTION = re.compile(r'^#\|\s*(fig-cap|tbl-cap|fig-subcap|fig-alt|'
+                     r'title|subtitle|label)\s*:')
+SKIP_DIR = ('_book/', '_freeze/', '.quarto/', 'site_libs/', '/libs/',
+            '_extensions/', 'renv/', '_site/', 'source-rmd/', '/archive/',
+            '/drafts/', '/scratch/')
+
+
+def _is_initial(pre):
+    line_prefix = pre.rsplit('\n', 1)[-1]
+    stripped = re.sub(r'^[\s>#*+\-.\d)|:"\'(]*', '', line_prefix)
+    ps = pre.rstrip()
+    return stripped == '' or (ps and ps[-1] in '.!?:;')
+
+
+EM = '—'                                  # em dash
+DASH = re.compile(r'[^\S\n]*' + EM + r'[^\S\n]*')
+PRON = {'it', 'they', 'you', 'we', 'this', 'these', 'that', 'there',
+        'he', 'she', 'i', 'one', 'anyone', 'everything', 'nothing'}
+
+
+def _emdash_seg(seg, changes):
+    """Replace em dashes with context-appropriate punctuation, logging
+    each as ('EM', repl) so `check` can flag it and `fix` can apply it.
+    Best-effort: cross-line pairs and noun-subject splices may want a
+    manual review (parentheses / semicolon), which `check` still flags."""
+    if EM not in seg:
+        return seg
+    ms = list(DASH.finditer(seg))
+    if len(ms) == 2:                           # parenthetical pair
+        a, b = ms
+        interior = seg[a.end():b.start()]
+        if ',' in interior:                    # interior has commas -> parens
+            changes.append(('EM', '(')); changes.append(('EM', ')'))
+            return (seg[:a.start()] + ' (' + interior + ') '
+                    + seg[b.end():]).replace('  (', ' (').replace(')  ', ') ')
+
+    def one(m):
+        i = m.start()
+        before = seg[:i].rstrip()
+        after_l = seg[i + len(m.group(0)):].lstrip()
+        first = re.match(r"[A-Za-z']+", after_l)
+        if before.endswith('`'):               # definition dash -> colon
+            r = ': '
+        elif first and first.group(0).lower() in PRON:   # indep. clause
+            r = '; '
+        elif after_l[:1].isupper():            # new clause -> period
+            r = '. '
+        else:                                   # appositive -> comma
+            r = ', '
+        changes.append(('EM', r.strip() or ','))
+        return r
+    return DASH.sub(one, seg)
+
+
+def transform_prose(seg, changes, flags, force):
+    seg = _emdash_seg(seg, changes)
+    def sub(m):
+        w = m.group(0)
+        r = usize_word(w)
+        if r is None:
+            return w
+        r = cap_match(w, r)
+        if r == w:
+            return w
+        if w[:1].isupper() and not w.isupper() and not force:
+            if not _is_initial(seg[:m.start()]):
+                flags.append((w, r))
+                return w
+        changes.append((w, r))
+        return r
+    return WORD.sub(sub, seg)
+
+
+def process_text(t, changes, flags, force):
+    out, in_code = [], False
+    for line in t.splitlines(keepends=True):
+        if FENCE_LINE.match(line):
+            in_code = not in_code
+            out.append(line)
+            continue
+        if in_code and not CAPTION.match(line):
+            out.append(line)
+            continue
+        parts = []
+        for j, p in enumerate(INLINE.split(line)):
+            parts.append(p if j % 2 == 1
+                         else transform_prose(p, changes, flags, force))
+        out.append(''.join(parts))
+    return ''.join(out)
+
+
+def iter_files(paths):
+    for p in paths:
+        if os.path.isfile(p):
+            yield p
+            continue
+        for ext in ('qmd', 'Rmd', 'rmd'):
+            for f in glob.glob(os.path.join(p, '**', f'*.{ext}'),
+                               recursive=True):
+                if not any(s in f for s in SKIP_DIR):
+                    yield f
+
+
+def check(paths):
+    """Report genuine British prose with file:line. Exit 1 if any found."""
+    findings = 0
+    for f in sorted(set(iter_files(paths))):
+        in_code = False
+        for n, line in enumerate(open(f, errors='replace'), 1):
+            if FENCE_LINE.match(line):
+                in_code = not in_code
+                continue
+            if in_code and not CAPTION.match(line):
+                continue
+            for seg in INLINE.split(line)[::2]:
+                ch = []
+                transform_prose(seg, ch, [], force=True)
+                for a, b in ch:
+                    if a == 'EM':
+                        print(f"{f}:{n}: em dash (use a comma, semicolon, "
+                              f"colon, or a sentence break)")
+                    else:
+                        print(f"{f}:{n}: British '{a}' -> US '{b}'")
+                    findings += 1
+    if findings:
+        print(f"\n{findings} style issue(s) found (British spelling and/or "
+              f"em dashes). See ~/.claude/CLAUDE.md. Fix spelling with: "
+              f"us-spelling fix <path>. Em-dash fixes are best-effort and "
+              f"should be reviewed.", file=sys.stderr)
+        print("To bypass this render gate once: SKIP_US_CHECK=1 quarto render",
+              file=sys.stderr)
+    return 1 if findings else 0
+
+
+def fix(paths, force):
+    total = 0
+    for f in sorted(set(iter_files(paths))):
+        src = open(f, errors='replace').read()
+        ch, flags = [], []
+        new = process_text(src, ch, flags, force)
+        if new != src and new.count('\n') == src.count('\n'):
+            fd, tmp = tempfile.mkstemp(suffix='.tmp', dir='/tmp')
+            with os.fdopen(fd, 'w') as w:
+                w.write(new)
+            shutil.copyfile(tmp, f)
+            os.remove(tmp)
+            total += len(ch)
+            print(f"{f}: {len(ch)} fixed")
+        if flags:
+            uniq = sorted({(a, b) for a, b in flags})
+            print(f"  {f}: review (capitalized, left as-is): "
+                  + ', '.join(f'{a}->{b}' for a, b in uniq))
+    print(f"\nfixed {total} British spelling(s)")
+    return 0
+
+
+def main():
+    if os.environ.get('SKIP_US_CHECK'):
+        return 0
+    args = sys.argv[1:]
+    cmd = args[0] if args and args[0] in ('check', 'fix') else None
+    rest = args[1:] if cmd else args
+    force = '--force' in rest or 'force' in rest
+    rest = [a for a in rest if a not in ('--force', 'force')]
+    if not rest:
+        # Pre-render context: check exactly the files Quarto will render,
+        # so legacy/non-rendered material (source-rmd/, archive/) is
+        # naturally excluded.
+        pd = os.environ.get('QUARTO_PROJECT_DIR', '.')
+        inp = os.environ.get('QUARTO_PROJECT_INPUT_FILES', '').strip()
+        files = []
+        for c in re.split(r'[\n]+|\s{2,}', inp):
+            c = c.strip()
+            if not c:
+                continue
+            p = c if os.path.isabs(c) else os.path.join(pd, c)
+            if os.path.exists(p):
+                files.append(p)
+        rest = files or [pd]
+    if cmd == 'fix':
+        return fix(rest, force)
+    return check(rest)
+
+
+if __name__ == '__main__':
+    sys.exit(main())

@@ -4,12 +4,12 @@
 This is the online version of **R for Biostatistics: A
 One-Week Boot Camp** by The rgtlab Curriculum Project, a short
 preparatory course for incoming graduate students in
-biostatistics and adjacent programmes.
+biostatistics and adjacent programs.
 
 The book covers everything an entering masters-level
 biostatistician needs to be functional in R on day one of
-the academic programme: installation, basic syntax, data
-manipulation with the tidyverse, visualisation with
+the academic program: installation, basic syntax, data
+manipulation with the tidyverse, visualization with
 ggplot2, simple statistics, and the minimum viable
 reproducibility setup. It is designed for **five
 consecutive days** of work: one hour of lecture content
@@ -19,18 +19,18 @@ The boot camp is the entry point to a five-volume graduate
 sequence:
 
 - **R for Biostatistics: A One-Week Boot Camp** (this
-  volume) — pre-program preparation.
+  volume), pre-program preparation.
 - [*Biostatistics Practicum*](https://rgtlab.org/practicum)
-  — workflow infrastructure (Git, Docker, renv, Quarto,
+, workflow infrastructure (Git, Docker, renv, Quarto,
   CDISC).
 - [*Statistical Computing in the Age of AI*](https://scai.rgtlab.org)
-  — introductory methods (linear models, GLM, mixed
+, introductory methods (linear models, GLM, mixed
   models, survival, Bayesian, bootstrap, simulation).
 - [*Advanced Statistical Computing in the Age of AI*](https://scai-advanced.rgtlab.org)
-  — advanced computing (numerical stability, MCMC, HPC,
+, advanced computing (numerical stability, MCMC, HPC,
   high-dimensional methods, ML, software engineering).
 - [*Applied Generative AI for Health Sciences Research*](https://applied-genai.rgtlab.org)
-  — capability classes, RAG, agents, evaluation,
+, capability classes, RAG, agents, evaluation,
   regulation, deployment.
 
 See the [Preface](preface.qmd) for the design rationale

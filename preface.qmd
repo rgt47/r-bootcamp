@@ -5,12 +5,12 @@ students in biostatistics who arrive with no or minimal
 prior exposure to R. It is the prerequisite that every
 subsequent volume in the sequence assumes; it covers
 exactly what is needed for a student to be functional in
-R on day one of an MS programme.
+R on day one of an MS program.
 
 The design constraint is severe: five lectures, ten hours
 of homework, and the student arrives at the academic
-programme productive. The constraint is met by ruthless
-prioritisation. A great deal that R can do is omitted
+program productive. The constraint is met by ruthless
+prioritization. A great deal that R can do is omitted
 deliberately; the omitted material lives in the four
 companion volumes that follow.
 
@@ -26,7 +26,7 @@ Five days, one chapter each:
    and Excel, tibbles, the six `dplyr` verbs (`filter`,
    `select`, `mutate`, `summarise`, `arrange`, `group_by`),
    the native pipe `|>`, joining tables.
-3. **Visualisation with ggplot2.** Grammar of graphics,
+3. **Visualization with ggplot2.** Grammar of graphics,
    geoms, aesthetics, scales, facets, themes, saving
    figures.
 4. **Functions, control flow, applied statistics.**
@@ -46,7 +46,7 @@ solutions provided.
 
 ## What this book does not cover
 
-The book deliberately omits — and points elsewhere for —
+The book deliberately omits (and points elsewhere for) 
 nearly everything beyond the entry-level basics:
 
 - Statistical methodology beyond simple tests and `lm`.
@@ -72,7 +72,7 @@ courses free to teach methods.
 
 The five-day cadence is the spine. A student starting
 the week with no R can finish the week ready for a
-graduate biostatistics programme. The cadence assumes
+graduate biostatistics program. The cadence assumes
 roughly 3 hours of focused work per day:
 
 - **Hour 1:** Read the chapter, work through the inline
@@ -97,7 +97,7 @@ The book assumes:
 - Comfort with high-school algebra. No prior programming
   experience is assumed.
 
-## Acknowledgements
+## Acknowledgments
 
 This boot camp consolidates patterns developed over two
 decades of teaching R to incoming biostatistics students.

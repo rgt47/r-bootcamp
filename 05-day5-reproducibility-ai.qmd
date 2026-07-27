@@ -8,10 +8,10 @@ By the end of this day you should be able to:
   code, and figures into a self-contained HTML or PDF.
 - Use RStudio Projects to keep an analysis self-contained
   and portable.
-- Initialise a Git repository, commit changes, and view
+- Initialize a Git repository, commit changes, and view
   the history through the RStudio IDE.
 - Use AI assistance (ChatGPT, Claude) responsibly:
-  recognise the failure modes, verify generated code
+  recognize the failure modes, verify generated code
   before trusting it, and document the AI's involvement.
 - Find the right companion volume for any topic that
   goes beyond the boot camp.
@@ -67,7 +67,7 @@ The cohort has `r nrow(cohort)` patients across
 ```{{r}}
 cohort |>
   group_by(sex) |>
-  summarise(n = n(),
+  summarize(n = n(),
             mean_age = mean(age),
             mean_sbp = mean(sbp))
 ```
@@ -121,7 +121,7 @@ Create one: **File → New Project → New Directory →
 New Project**, give it a name and a location, click
 Create.
 
-Inside the project, organise files by convention:
+Inside the project, organize files by convention:
 
 ```
 my-project/
@@ -197,7 +197,7 @@ A working pattern for daily research:
 ### Using AI assistance responsibly
 
 You are using ChatGPT, Claude, or a similar tool right
-now. So is every other student in your programme. The
+now. So is every other student in your program. The
 question is not whether to use them; it is how to use
 them well.
 
@@ -218,7 +218,7 @@ What AI is good for:
 
 What AI is **not** good for:
 
-- **Statistical judgement.** 'Should I use a t-test or a
+- **Statistical judgment.** 'Should I use a t-test or a
   Wilcoxon?' The AI will pick one and justify it
   plausibly. It does not know your context.
 - **Real-data verification.** AI-generated code
@@ -248,9 +248,9 @@ The discipline:
    transparency is now an explicit reviewer expectation
    in many journals.
 
-The deeper version of this material — context
+The deeper version of this material (context
 engineering, reasoning models, agents, evaluation
-harnesses — is the subject of *Applied Generative AI for
+harnesses) is the subject of *Applied Generative AI for
 Public Health and Biostatistics*. For the boot camp,
 the discipline above is enough.
 
@@ -273,7 +273,7 @@ Step 4. Render. Click the **Render** button. RStudio
 produces `report.html` and (if PDF is configured)
 `report.pdf`.
 
-Step 5. Initialise Git. **Tools → Project Options →
+Step 5. Initialize Git. **Tools → Project Options →
 Git/SVN**. Stage all files and commit with the message
 'Initial cohort analysis report'.
 
@@ -298,7 +298,7 @@ about 5 minutes the second.
    from Day 3), a t-test or chi-squared test, and a
    2-sentence conclusion. Render to HTML.
 
-2. **Initialise Git.** Initialise a Git repository for
+2. **Initialize Git.** Initialize a Git repository for
    your project. Commit the report and the data file
    (or a `.gitignore` that excludes the data; either is
    fine for this exercise). Add a README.md explaining
@@ -322,7 +322,7 @@ about 5 minutes the second.
 
 5. **Reflection.** Write a one-paragraph reflection on
    what you most need to practice in the first month of
-   the programme. Be specific: not 'I should learn more
+   the program. Be specific: not 'I should learn more
    R' but 'I need to get faster at writing pipelines
    that combine `filter`, `mutate`, `group_by`, and
    `summarise` without looking up the syntax each
@@ -363,11 +363,11 @@ looks like:
   identical. Adopt the suggestion.
 
 - *Suggestion that was wrong.* The AI suggests
-  `cohort |> dplyr::summarise_groups(mean(sbp))` to
+  `cohort |> dplyr::summarize_groups(mean(sbp))` to
   compute the per-group mean. You run it and get
   'function not found'. The function does not exist; the
   AI hallucinated. The correct code is
-  `cohort |> group_by(sex) |> summarise(mean(sbp))`.
+  `cohort |> group_by(sex) |> summarize(mean(sbp))`.
 
 The pattern: run the code. AI failures are usually
 loud (errors); the silent failures (subtly wrong
@@ -375,13 +375,13 @@ output) require deeper checking.
 
 **Problems 4 and 5.** Open-ended; the goal is to start
 forming the connection between today's bootcamp and
-your programme's actual curriculum.
+your program's actual curriculum.
 
 ## What's next: the five companion volumes
 
 The boot camp ends here. The next thread of the
 curriculum picks up in one of the companion volumes,
-depending on what your programme requires next:
+depending on what your program requires next:
 
 - **Reproducibility infrastructure** (Git in depth,
   Docker, renv, Quarto book authoring, CDISC, SAS,
@@ -414,4 +414,4 @@ the rest of your graduate biostatistics training is
 underway in parallel; they build the methods curriculum
 on top of the R-side mechanics you now have.
 
-Good luck with the programme.
+Good luck with the program.
