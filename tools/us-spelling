@@ -240,6 +240,9 @@ def process_text(t, changes, flags, force):
     return ''.join(out)
 
 
+CONFIG = ('_quarto.yml', '_metadata.yml', '_variables.yml')
+
+
 def iter_files(paths):
     for p in paths:
         if os.path.isfile(p):
@@ -248,6 +251,13 @@ def iter_files(paths):
         for ext in ('qmd', 'Rmd', 'rmd'):
             for f in glob.glob(os.path.join(p, '**', f'*.{ext}'),
                                recursive=True):
+                if not any(s in f for s in SKIP_DIR):
+                    yield f
+        # Quarto config carries prose (title, subtitle, part labels) that
+        # renders into the site but is not a render input; check it too.
+        for cfg in CONFIG:
+            for f in (glob.glob(os.path.join(p, cfg))
+                      + glob.glob(os.path.join(p, '**', cfg), recursive=True)):
                 if not any(s in f for s in SKIP_DIR):
                     yield f
 
@@ -327,6 +337,10 @@ def main():
             p = c if os.path.isabs(c) else os.path.join(pd, c)
             if os.path.exists(p):
                 files.append(p)
+        for cfg in CONFIG:                     # also gate the Quarto config
+            cp = os.path.join(pd, cfg)
+            if os.path.exists(cp):
+                files.append(cp)
         rest = files or [pd]
     if cmd == 'fix':
         return fix(rest, force)
