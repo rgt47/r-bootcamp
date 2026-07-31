@@ -1,0 +1,12 @@
+Package: rbootcamp
+Title: rbootcamp Data Analysis
+Version: 0.0.0.9000
+Authors@R:
+    person(given = "Ronald G.", family = "Thomas", email = "rgthomas@ucsd.edu", role = c("aut", "cre"))
+Description: Data analysis workspace for the rbootcamp project.
+License: GPL-3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.0
+Suggests:
+    tinytest (>= 1.4.0)
