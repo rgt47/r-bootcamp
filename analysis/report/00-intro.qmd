@@ -17,11 +17,11 @@ Each day has the same shape:
   problem before checking the solution.
 
 The cadence assumes one chapter per day for five
-consecutive days. The boot camp may be compressed (two
-chapters per day across two-and-a-half days) or expanded
-(one chapter per week across a month) depending on the
-student's other commitments; we leave the choice to the
-reader, since it depends somewhat on one's other obligations.
+consecutive days. The boot camp may be compressed to two
+chapters per day across two-and-a-half days, or expanded to
+one chapter per week across a month, depending on the
+student's other commitments. We leave the choice to the
+reader.
 
 ## Chapter template
 
@@ -45,9 +45,9 @@ entirely through the homework solutions.
 ## Conventions
 
 The visual cues used throughout the book are described on the
-[Conventions](conventions.qmd) page. This book is R-first;
-the style follows tidyverse conventions, which we have found
-to be relatively straightforward to read:
+[Conventions](conventions.qmd) page. This book is R-first,
+and the style follows tidyverse conventions, which we have
+found relatively straightforward to read:
 
 - The native pipe `|>` is used throughout (not `%>%`).
 - Assignment uses `<-` (not `=`).

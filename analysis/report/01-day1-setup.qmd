@@ -19,11 +19,10 @@ By the end of this day you should be able to:
 
 R is a programming language built specifically for
 statistical computing. You will spend the next few years
-of your graduate career running R in some form every day.
-This first hour gets you to the point where R is
-installed, you can type expressions and have them
-evaluated, and you understand what R is doing with the
-characters you type.
+of your graduate career running R in some form nearly
+every day. This first hour has a modest goal: R installed,
+expressions typed and evaluated, and a working sense of
+what R is doing with the characters you type.
 
 ### Installing R and RStudio
 
@@ -131,8 +130,8 @@ range(ages)
 ```
 
 This vectorized behavior is the single most important
-idiom in R. You almost never write loops to apply an
-operation element-by-element; R does it for you.
+idiom in R. You will rarely need to write a loop to apply
+an operation element by element. R does it for you.
 
 ### Data types
 
@@ -154,8 +153,8 @@ typeof(factor(c("low", "high")))   # factor
 
 A **factor** is R's way of representing a categorical
 variable. Internally it is an integer with a labeling.
-You will encounter factors immediately when reading data;
-treat them as categorical for now.
+You will encounter factors immediately when reading data.
+For now, treat them simply as categorical.
 
 R coerces between types automatically when it can:
 
@@ -169,7 +168,8 @@ as.numeric("5") + 1
 ```
 
 Coercion is the source of many beginner bugs. When in
-doubt, check the type with `typeof()` or `class()`.
+doubt, it is worth checking the type directly with
+`typeof()` or `class()`.
 
 ### Indexing vectors
 
@@ -208,13 +208,14 @@ biomarkers["ldl"]
 ```
 
 Logical indexing is the workhorse of data manipulation in
-R. Read it as 'keep the elements where the condition is
-TRUE'.
+R. It is best read as 'keep the elements where the
+condition is TRUE'.
 
 ### Missing values
 
-Real biomedical data has missing values. R represents
-them as `NA` (Not Available):
+Real biomedical data has missing values, and it is
+worthwhile to become comfortable with them early. R
+represents a missing value as `NA` (Not Available):
 
 ```r
 labs <- c(7.2, NA, 6.8, 8.1, NA)
@@ -228,9 +229,9 @@ mean(labs, na.rm = TRUE)
 
 `mean()` returns `NA` by default when any input is `NA`.
 Adding `na.rm = TRUE` removes the missing values before
-computing. Most R functions follow this convention; it is
-deliberate, to force you to think about how you want to
-handle the missingness rather than silently ignoring it.
+computing. Most R functions follow this convention, and
+the convention is deliberate. It forces you to decide how
+to handle missingness rather than silently ignoring it.
 
 Test for missingness with `is.na()`:
 
@@ -248,8 +249,9 @@ labs == NA
 #> [1]  NA  NA  NA  NA  NA
 ```
 
-`NA == NA` is `NA` (because the result of comparing an
-unknown to an unknown is itself unknown).
+`NA == NA` is itself `NA`. The result of comparing an
+unknown quantity to an unknown quantity is, appropriately,
+unknown.
 
 ## Worked example: a small biomedical dataset
 
@@ -289,10 +291,11 @@ ages[hypertensive]
 ```
 
 In three lines you have done what an analyst might
-otherwise do by hand: counted the cohort, computed
-summary statistics with explicit missing-data handling,
-and identified the subset of clinical interest. This is
-the core rhythm of R for biostatistics.
+otherwise work through by hand: counted the cohort,
+computed summary statistics with explicit missing-data
+handling, and identified the subset of clinical interest.
+This is the core rhythm of R for biostatistics, and it
+will recur, in more elaborate form, throughout the week.
 
 ## Homework
 
@@ -389,13 +392,13 @@ c(1, 2, 3) + c(10, 20, 30)
 #> [1] 11 22 33
 ```
 
-(c) `x = 5; x ** 2`. The `=` is allowed for assignment
-but the convention in R is `<-`. R's parser actually
-silently rewrites `**` to `^` (see `?Arithmetic`), so
-this expression returns 25. The expression is not
-strictly broken, but `**` is not idiomatic in R and
-relies on a parser quirk that is easy to forget; prefer
-`^` explicitly:
+(c) `x = 5; x ** 2`. The `=` is allowed for assignment,
+but the convention in R is `<-`. R's parser silently
+rewrites `**` to `^` (see `?Arithmetic`), so this
+expression returns 25. The expression is not strictly
+broken, but `**` is not idiomatic in R and relies on a
+parser quirk that is easy to forget. We prefer `^`
+explicitly:
 
 ```r
 x <- 5
@@ -431,12 +434,12 @@ labs
 #> [1] 7.20 7.08 6.80 8.10 7.08 5.90 7.40 7.08
 ```
 
-Note: imputing missing values with the mean is sometimes
-acceptable for exploratory work but can bias inferences
-in a real analysis. Day 4 introduces statistical tests;
-the *Practicum* and *Applied Methods* volumes treat
-missing-data handling at the level you will need for
-publishable work.
+A caution is in order here. Imputing missing values with
+the mean is sometimes acceptable for exploratory work, but
+it can bias inferences in a real analysis. Day 4
+introduces statistical tests. The *Practicum* and *Applied
+Methods* volumes treat missing-data handling at the depth
+publishable work requires.
 
 ## What's next
 

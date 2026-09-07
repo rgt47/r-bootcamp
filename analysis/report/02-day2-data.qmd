@@ -15,13 +15,13 @@ By the end of this day you should be able to:
 
 ## Lecture
 
-Real biostatistical work starts with someone handing you a
-spreadsheet, a CSV from the EHR, or an export from REDCap.
-The first hour of an analysis is usually loading that data
-into R, looking at it, and getting it into a shape that
-your analysis can consume. The `tidyverse` is the modern
-toolkit for that work; the six core `dplyr` verbs are 90%
-of what you need.
+Real biostatistical work usually starts with someone
+handing you a spreadsheet, a CSV from the EHR, or an
+export from REDCap. The first hour of an analysis is
+typically loading that data into R, looking at it, and
+getting it into a shape your analysis can consume. The
+`tidyverse` is the modern toolkit for that work. The six
+core `dplyr` verbs cover most of what you will need.
 
 ### Installing the tidyverse
 
@@ -53,10 +53,10 @@ The convention the tidyverse rests on:
 - One value per **cell**.
 
 A tidy dataset is what most statistical functions expect.
-Real data is often untidy (multiple variables in one
-column, multiple observations in one row). Day 2 assumes
-the data arrives roughly tidy; Day 4 has a homework
-problem on tidying.
+Real data is often untidy, with multiple variables
+crowded into one column or multiple observations crowded
+into one row. Day 2 assumes the data arrives roughly tidy.
+Day 4 takes up tidying itself, in a homework problem.
 
 ### Reading data
 
@@ -215,9 +215,9 @@ grouped, which is occasionally a source of surprise.
 
 ### Joining tables
 
-Real data lives in multiple tables. Demographics in one
+Real data lives in multiple tables: demographics in one
 file, lab results in another, medications in a third. The
-join verbs combine them.
+join verbs are what bring these tables together.
 
 ```r
 patients
@@ -261,9 +261,10 @@ Other joins:
   in the right table, useful for finding data-quality
   problems.
 
-Always check the row count before and after a join. A
-join that unexpectedly multiplies rows means the join key
-is not unique on one side; investigate before proceeding.
+It is always worth checking the row count before and
+after a join. A join that unexpectedly multiplies rows
+means the join key is not unique on one side, and that is
+worth investigating before proceeding further.
 
 ::: {.callout-note}
 A common pattern in clinical data: the join key is a
@@ -336,9 +337,10 @@ nhanes |>
 #> 6 60+       M        70     138.         0.243
 ```
 
-The pipeline is six lines of code that produces a publishable
-descriptive table. The pattern (read, glimpse, mutate-derived,
-group, summarize) is the rhythm you will use every day.
+The pipeline is six lines of code, and it produces a
+publishable descriptive table. Read, glimpse, add derived
+variables, group, and summarize: this is the rhythm you
+will use every day.
 
 ## Homework
 
@@ -443,10 +445,10 @@ dataset. For each, two reasonable handling decisions:
 - Systolic blood pressure of 0 is impossible (the
   patient would not be alive). Set to `NA`. Document.
 
-The general lesson: data-quality issues are the analyst's
-to identify and to handle deliberately. Silent
-imputation, dropping, or inclusion of clearly wrong data
-all bias the result; documented handling does not.
+The general lesson is this: data-quality issues are the
+analyst's to identify and to handle deliberately. Silent
+imputation, silent dropping, or silent inclusion of wrong
+data all bias the result. Documented handling does not.
 
 ## What's next
 

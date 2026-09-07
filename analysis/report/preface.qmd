@@ -1,18 +1,18 @@
 # Preface {.unnumbered}
 
 This volume is a one-week boot camp for incoming graduate
-students in biostatistics who arrive with no or minimal
+students in biostatistics who arrive with little or no
 prior exposure to R. It is the prerequisite that every
-subsequent volume in the sequence assumes; it covers
-exactly what is needed for a student to be functional in
-R on day one of an MS program.
+subsequent volume in the sequence assumes. It covers what
+a student needs in order to be functional in R on day one
+of an MS program, and nothing more.
 
-The design constraint is severe: five lectures, ten hours
-of homework, and the student arrives at the academic
-program productive. The constraint is met by ruthless
-prioritization. A great deal that R can do is omitted
-deliberately; the omitted material lives in the four
-companion volumes that follow.
+The design constraint is severe: five lectures and ten
+hours of homework, and the student arrives at the academic
+program productive. We meet this constraint through
+ruthless prioritization. A great deal of what R can do is
+omitted deliberately. The omitted material lives in the
+four companion volumes that follow.
 
 ## What this book covers
 
@@ -46,7 +46,7 @@ solutions provided.
 
 ## What this book does not cover
 
-The book deliberately omits (and points elsewhere for) 
+The book deliberately omits, and points elsewhere for,
 nearly everything beyond the entry-level basics:
 
 - Statistical methodology beyond simple tests and `lm`.
@@ -65,15 +65,15 @@ nearly everything beyond the entry-level basics:
 
 The boot camp is intentionally narrow. The student
 finishes Day 5 and proceeds to the methods courses with
-the R-side mechanics in place, leaving the methods
-courses free to teach methods.
+the R-side mechanics already in place. This leaves the
+methods courses free to teach methods.
 
 ## How this book is meant to be used
 
-The five-day cadence is the spine. A student starting
-the week with no R can finish the week ready for a
+The five-day cadence is the spine of the book. A student
+who starts the week with no R can finish it ready for a
 graduate biostatistics program. The cadence assumes
-roughly 3 hours of focused work per day:
+roughly three hours of focused work per day:
 
 - **Hour 1:** Read the chapter, work through the inline
   examples in your own R session.
@@ -82,28 +82,28 @@ roughly 3 hours of focused work per day:
   attempting each problem.
 
 The book also functions as a reference. After the boot
-camp, returning students often look up specific patterns
-(joining tables, customising a ggplot, writing a function)
-in their original chapters.
+camp, returning students often look up specific patterns,
+such as joining tables, customizing a ggplot, or writing a
+function, in their original chapters.
 
 ## Prerequisites
 
 The book assumes:
 
 - A working laptop running macOS, Windows, or Linux.
-- Basic familiarity with using a computer (opening
+- Basic familiarity with using a computer: opening
   applications, creating files, navigating the
-  filesystem).
-- Comfort with high-school algebra. No prior programming
-  experience is assumed.
+  filesystem.
+- Comfort with high-school algebra. We assume no prior
+  programming experience.
 
 ## Acknowledgments
 
-This boot camp consolidates patterns developed over two
-decades of teaching R to incoming biostatistics students.
-The Posit team's *R for Data Science* and the conventions
-of the modern tidyverse provide the technical scaffolding;
-the boot-camp pedagogy reflects experience with what
-incoming students actually need to know in the first
-week, as distinct from what an instructor might want them
-to know.
+This boot camp consolidates patterns we have developed
+over two decades of teaching R to incoming biostatistics
+students. The Posit team's *R for Data Science* and the
+conventions of the modern tidyverse provide the technical
+scaffolding. The boot-camp pedagogy itself reflects
+experience with what incoming students actually need to
+know in the first week, as distinct from what an
+instructor might want them to know.

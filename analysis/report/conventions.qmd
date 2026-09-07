@@ -1,29 +1,31 @@
 # Conventions {.unnumbered}
 
-This page summarizes the visual conventions used
-throughout the book.
+This page sets out the visual conventions used
+throughout the book. We describe them here rather than
+leaving the reader to infer them chapter by chapter.
 
 ## Code
 
 R code appears in syntax-highlighted blocks. Output is
-prefixed with `#>` to make the boundary between input and
-output explicit:
+prefixed with `#>`. This convention makes the boundary
+between input and output explicit:
 
 ```r
 mean(c(1, 2, 3, 4, 5))
 #> [1] 3
 ```
 
-Inline code is in `monospace`. Function calls always
-include parentheses (`mean()` rather than `mean`) so that
-they are unambiguously functions. Package-qualified calls
-(`dplyr::filter`) appear when the function is not
-universally known, when there is name-collision risk, or
-when the chapter is teaching package usage.
+Inline code appears in `monospace`. Function calls always
+include parentheses (`mean()` rather than `mean`), so that
+they read unambiguously as functions rather than objects.
+Package-qualified calls (`dplyr::filter`) appear when the
+function is not universally known, when there is a risk of
+name collision, or when the chapter is teaching package
+usage directly.
 
 ## Callouts
 
-Three callout types appear:
+Three callout types appear in the text.
 
 ::: {.callout-tip}
 ## Tip
@@ -46,31 +48,33 @@ A pitfall the reader may otherwise hit.
 
 ## Cross-references
 
-Within this book, sections, figures, and tables are
-referenced by their Quarto label
-(`@sec-monte-carlo-human`, `@fig-mcmc-trace`,
-`@tbl-comparison`). These resolve to clickable links in
-HTML and proper figure/table numbers in PDF.
+Within this book, we reference sections, figures, and
+tables by their Quarto label (`@sec-monte-carlo-human`,
+`@fig-mcmc-trace`, `@tbl-comparison`). These resolve to
+clickable links in HTML and to proper figure and table
+numbers in PDF.
 
 References to the companion volumes
 *Statistical Computing in the Age of AI* and
 *Biostatistics Practicum* use **prose pointers** rather
-than Quarto cross-references, because cross-references do
-not resolve across separate books. For example: 'see the
-Optimization chapter of the companion *Statistical
-Computing in the Age of AI* volume'.
+than Quarto cross-references. Cross-references do not
+resolve across separate books, so a pointer of this form is
+necessary: 'see the Optimization chapter of the companion
+*Statistical Computing in the Age of AI* volume'.
 
 ## Mathematical notation
 
-Conventional notation throughout. Vectors are bold
+We use conventional notation throughout. Vectors are bold
 lower-case ($\mathbf{x}$); matrices are bold upper-case
 ($\mathbf{X}$); scalars and parameters are non-bold.
-Estimators carry hats ($\hat\theta$). Sample size is $n$;
-parameter dimension is $p$.
+Estimators carry hats ($\hat\theta$). Sample size is $n$
+and parameter dimension is $p$.
 
 ## Chapter structure
 
-Every content chapter follows the same template:
+Every content chapter follows the same template. We repeat
+it deliberately, so that by the third chapter the reader
+already knows where to find each component.
 
 1. **Learning objectives.** What you will be able to do
    after reading.
@@ -84,6 +88,3 @@ Every content chapter follows the same template:
    assistance.
 6. **Exercises.** The work.
 7. **Further reading.** Where to go next on the topic.
-
-The pattern repeats deliberately. By the third chapter
-you know where to find each component.

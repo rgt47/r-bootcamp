@@ -2,18 +2,19 @@
 
 
 This is the online version of **R for Biostatistics: A
-One-Week Boot Camp** by The rgtlab Curriculum Project, a short
-preparatory course for incoming graduate students in
-biostatistics and adjacent programs.
+One-Week Boot Camp** by The rgtlab Curriculum Project. We
+designed it as a short preparatory course for incoming
+graduate students in biostatistics and adjacent programs.
 
-The book covers everything an entering masters-level
-biostatistician needs to be functional in R on day one of
-the academic program: installation, basic syntax, data
-manipulation with the tidyverse, visualization with
-ggplot2, simple statistics, and the minimum viable
-reproducibility setup. It is designed for **five
-consecutive days** of work: one hour of lecture content
-each day, two hours of homework, no examinations.
+The book covers what an entering masters-level
+biostatistician needs in order to be functional in R on
+day one of the academic program: installation, basic
+syntax, data manipulation with the tidyverse,
+visualization with ggplot2, simple statistics, and the
+minimum viable reproducibility setup. We designed it for
+**five consecutive days** of work, one hour of lecture
+content each day and two hours of homework, with no
+examinations.
 
 The boot camp is the entry point to a five-volume graduate
 sequence:

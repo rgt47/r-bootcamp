@@ -19,13 +19,13 @@ By the end of this day you should be able to:
 ## Lecture
 
 Day 4 takes you from 'I can read and visualize data' to
-'I can compute statistics on it'. The four ideas are:
-write a function for anything you do more than once;
+'I can compute statistics on it'. Four ideas carry the
+day: write a function for anything you do more than once;
 prefer `purrr::map` over explicit loops; know the basic
-summary statistics; know how to run a t-test, a
+summary statistics; and know how to run a t-test, a
 chi-squared test, and a simple regression. With these in
 place you can do most of the descriptive and exploratory
-work an MS-level biostatistician produces.
+work an MS-level biostatistician is asked to produce.
 
 ### Writing functions
 
@@ -65,8 +65,9 @@ summarise_lab(c(7.2, 6.8, NA, 8.1, 7.4))
 ```
 
 The `na.rm = TRUE` default means the function silently
-removes missing values unless the caller overrides. Be
-deliberate about defaults; they affect the answer.
+removes missing values unless the caller overrides it. It
+is worth being deliberate about defaults, since they
+affect the answer.
 
 ::: {.callout-note}
 The rule of thumb: write a function the third time you
@@ -136,9 +137,9 @@ numeric vector (`map` returns a list; `map_dbl`,
 `map_dfr` returns a row-bound tibble.
 
 For most applied biostatistics, the equivalent operation
-inside `dplyr` is `group_by` + `summarise`. Reach for
-`map` when working with lists of model fits, lists of
-files, lists of countries, anything that is genuinely
+inside `dplyr` is `group_by` plus `summarise`. Reach for
+`map` instead when working with lists of model fits, lists
+of files, lists of countries, or anything genuinely
 list-shaped rather than tabular.
 
 ### Summary statistics
@@ -202,9 +203,10 @@ t.test(sbp ~ sex, data = cohort)
 #>           126.1            131.4
 ```
 
-R defaults to **Welch's** t-test (unequal variances),
-which is the right default. The `~` (tilde) is R's
-formula syntax: 'sbp explained by sex'.
+R defaults to **Welch's** t-test, which allows for
+unequal variances, and this is the right default. The `~`
+(tilde) is R's formula syntax, read as 'sbp explained by
+sex'.
 
 What to read in the output:
 
@@ -216,10 +218,10 @@ What to read in the output:
   95% CI for the difference in means.
 - The sample means in each group.
 
-A one-sentence interpretation: women have lower SBP than
-men by about 5.3 mmHg on average; the difference is
-statistically significant at α = 0.05; the 95% CI for
-the difference is (-9.7, -0.8).
+In sum: women have lower SBP than men by about 5.3 mmHg on
+average. The difference is statistically significant at
+α = 0.05, and the 95% CI for the difference is
+(-9.7, -0.8).
 
 ::: {.callout-note}
 A statistically significant t-test does not by itself
@@ -253,8 +255,8 @@ fisher.test(table(cohort$sex, cohort$diabetic))
 ```
 
 A common applied error is to use chi-squared on a sparse
-table; the p-value is unreliable. Check the expected
-counts first:
+table, since the p-value is then unreliable. It is worth
+checking the expected counts first:
 
 ```r
 chisq.test(table(cohort$sex, cohort$diabetic))$expected
@@ -276,8 +278,8 @@ fit
 #>     106.21         0.46
 ```
 
-The intercept (106.21) is the predicted SBP at age 0; the
-slope (0.46) is the predicted change in SBP per one-year
+The intercept, 106.21, is the predicted SBP at age 0. The
+slope, 0.46, is the predicted change in SBP per one-year
 increase in age.
 
 The summary:
@@ -321,9 +323,10 @@ summary(fit2)
 ```
 
 Each coefficient is interpreted holding the others
-constant. The interpretation gets harder once you
-include terms that are correlated; the *Applied Methods*
-volume's chapter on causal inference treats this carefully.
+constant. The interpretation becomes harder once the
+included terms are themselves correlated, and the
+*Applied Methods* volume's chapter on causal inference
+treats this carefully.
 
 ## Worked example: an end-to-end exploratory analysis
 
@@ -375,11 +378,11 @@ p = 0.005) holding age and BMI constant. R² is around
 0.27.
 
 The `{{ }}` (curly-curly) syntax in the function above is
-how `dplyr` and friends pass column names as arguments
-into a function. You will use this idiom enough that it
-becomes muscle memory; for now, treat it as the
-recipe for 'pass a column name into a tidyverse
-function'.
+how `dplyr` and its companions pass column names as
+arguments into a function. You will use this idiom often
+enough that it becomes muscle memory. For now, treat it
+simply as the recipe for passing a column name into a
+tidyverse function.
 
 ## Homework
 
@@ -450,8 +453,8 @@ t.test(bmi ~ diabetic, data = cohort)
 #> means: non-diabetic 27.4, diabetic 29.6
 ```
 
-Diabetic patients have higher mean BMI than non-
-diabetic patients by about 2.2 kg/m² (95% CI 0.9-3.4,
+Diabetic patients have higher mean BMI than non-diabetic
+patients, by about 2.2 kg/m² (95% CI 0.9 to 3.4,
 p = 0.001).
 
 **Problem 3.**
@@ -461,10 +464,10 @@ chisq.test(table(cohort$age_group, cohort$diabetic))
 #> X-squared = 22.1, df = 2, p-value = 1.6e-5
 ```
 
-Expected counts (from `chisq.test(...)$expected`) are
-all above 5, so chi-squared is appropriate. Fisher's
-exact would not be necessary; it would give a similar
-answer but is computationally heavier.
+Expected counts, from `chisq.test(...)$expected`, are all
+above 5, so chi-squared is appropriate here. Fisher's
+exact is not necessary. It would give a similar answer but
+is computationally heavier.
 
 **Problem 4.**
 
@@ -485,15 +488,14 @@ summary(fit_multi)
 #> bmi: estimate = 0.85, SE = 0.20, t = 4.3, p < 0.001
 ```
 
-The BMI slope drops from 1.32 to 0.85 when age and sex
-are added. The interpretation: in the simple model, the
-BMI coefficient absorbs some of the age-and-sex
-relationship with SBP (older and male patients tend to
-have higher BMI and higher SBP). Adjusting for age and
-sex isolates the BMI-SBP relationship from those
-confounders. The careful version of this story is the
-subject of the *Causal inference* chapters in *Applied
-Methods*.
+The BMI slope drops from 1.32 to 0.85 when age and sex are
+added. In the simple model, the BMI coefficient appears to
+absorb some of the age-and-sex relationship with SBP,
+since older and male patients tend to have both higher BMI
+and higher SBP. Adjusting for age and sex isolates the
+BMI-SBP relationship from those confounders. The careful
+version of this story is the subject of the *Causal
+inference* chapters in *Applied Methods*.
 
 ## What's next
 

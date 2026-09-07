@@ -18,21 +18,20 @@ By the end of this day you should be able to:
 
 ## Lecture
 
-The first four days have given you R as a calculator: you
+The first four days have given you R as a calculator. You
 can read data, manipulate it, plot it, and compute
 statistics on it. Day 5 turns that into reproducible
 research output and introduces the AI tools you will
-already be using by the end of your first quarter.
-Nothing here is technically deep; everything here is the
-table-stakes you will be expected to have on day one.
+already be using by the end of your first quarter. Nothing
+here is technically deep. It is the table-stakes competence
+you will be expected to have on day one.
 
 ### Quarto
 
-Quarto is the document format for combining prose, R
-code, and code output (tables, figures) into a single
+Quarto is the document format for combining prose, R code,
+and code output, such as tables and figures, into a single
 file. The same source file renders to HTML for the web,
-PDF for print, and Word for collaborators who insist on
-it.
+PDF for print, and Word for collaborators who insist on it.
 
 A minimal Quarto document (`report.qmd`):
 
@@ -106,9 +105,9 @@ The pieces:
   `#| fig-cap: "..."` adds a figure caption.
 
 A single Quarto report replaces the typical split between
-analysis script + exported figures + Word document. The
-document is reproducible: render again later, get the
-same output.
+an analysis script, exported figures, and a separate Word
+document. The document is genuinely reproducible: render
+it again later and you get the same output.
 
 ### RStudio Projects
 
@@ -148,14 +147,14 @@ The benefits of using projects:
 - Each project has its own R session (no leftover
   variables from another analysis).
 
-Always work inside a project. The `getwd()` function
-should return the project root.
+It is worth always working inside a project. The `getwd()`
+function should, in that case, return the project root.
 
 ### Git through the IDE
 
 Git tracks the history of changes to the files in your
-project. RStudio has a **Git** pane (top-right, between
-Environment and Files when Git is enabled) that shows
+project. RStudio has a **Git** pane, top-right, between
+Environment and Files when Git is enabled, and it shows
 all four operations a beginner needs.
 
 To turn on Git for an existing project: **Tools → Project
@@ -178,10 +177,10 @@ The four operations:
    see all past commits with messages, authors, and
    diffs.
 
-That covers single-developer Git. For collaboration,
-push and pull (working with a remote like GitHub) are
-the next two operations; they live in the same pane and
-are covered in the *Practicum* volume.
+That covers single-developer Git. For collaboration, push
+and pull, that is, working with a remote such as GitHub,
+are the next two operations. They live in the same pane
+and are covered in the *Practicum* volume.
 
 A working pattern for daily research:
 
@@ -196,10 +195,10 @@ A working pattern for daily research:
 
 ### Using AI assistance responsibly
 
-You are using ChatGPT, Claude, or a similar tool right
-now. So is every other student in your program. The
-question is not whether to use them; it is how to use
-them well.
+You are almost certainly using ChatGPT, Claude, or a
+similar tool right now, and so is every other student in
+your program. The real question is not whether to use
+these tools. It is how to use them well.
 
 What AI is good for:
 
@@ -222,15 +221,15 @@ What AI is **not** good for:
   Wilcoxon?' The AI will pick one and justify it
   plausibly. It does not know your context.
 - **Real-data verification.** AI-generated code
-  frequently does what the AI thinks the data looks
-  like, not what your data actually looks like. Run the
-  code on your data; don't take its claims about output
-  at face value.
+  frequently does what the AI assumes the data looks
+  like, not what your data actually looks like. It is
+  necessary to run the code on your own data rather than
+  take its claims about the output at face value.
 - **Hallucinated functions.** AI will sometimes generate
-  `dplyr::summarise_groups()` (does not exist) or
-  `tidyr::pivot_wider_with_progress()` (made up). Run
-  the code; let R's 'function not found' error catch
-  the hallucination.
+  `dplyr::summarise_groups()`, which does not exist, or
+  `tidyr::pivot_wider_with_progress()`, which is invented.
+  Run the code, and let R's 'function not found' error
+  catch the hallucination.
 
 The discipline:
 
@@ -244,15 +243,14 @@ The discipline:
    package documentation (`?dplyr::summarise`).
 4. **Document the AI involvement.** When you use AI in a
    real analysis, note which parts of the work were
-   AI-assisted and how you verified them. The
-   transparency is now an explicit reviewer expectation
-   in many journals.
+   AI-assisted and how you verified them. This transparency
+   is now an explicit reviewer expectation at many journals.
 
-The deeper version of this material (context
-engineering, reasoning models, agents, evaluation
-harnesses) is the subject of *Applied Generative AI for
-Public Health and Biostatistics*. For the boot camp,
-the discipline above is enough.
+The deeper version of this material, covering context
+engineering, reasoning models, agents, and evaluation
+harnesses, is the subject of *Applied Generative AI for
+Public Health and Biostatistics*. For the boot camp, the
+discipline above is sufficient.
 
 ## Worked example: a one-page Quarto report
 
@@ -285,8 +283,8 @@ Step 7. Iterate. Make a change to the report (add a new
 section, modify a figure). Re-render. Commit. Look at
 the History to see the two commits.
 
-The whole flow takes 30-60 minutes the first time and
-about 5 minutes the second.
+The whole flow takes thirty to sixty minutes the first
+time and about five minutes thereafter.
 
 ## Homework
 
@@ -369,9 +367,9 @@ looks like:
   AI hallucinated. The correct code is
   `cohort |> group_by(sex) |> summarize(mean(sbp))`.
 
-The pattern: run the code. AI failures are usually
-loud (errors); the silent failures (subtly wrong
-output) require deeper checking.
+The general pattern is to run the code. AI failures are
+usually loud, in the form of errors. The silent failures,
+where the output is subtly wrong, require deeper checking.
 
 **Problems 4 and 5.** Open-ended; the goal is to start
 forming the connection between today's bootcamp and
@@ -408,10 +406,10 @@ depending on what your program requires next:
   Statistical Methods for Public Health* at
   <https://applied-methods.rgtlab.org>.
 
-The boot camp gave you the entry-level R competence the
-companion volumes assume. The companion volumes assume
+The boot camp has given you the entry-level R competence
+the companion volumes assume. Those volumes in turn assume
 the rest of your graduate biostatistics training is
-underway in parallel; they build the methods curriculum
-on top of the R-side mechanics you now have.
+underway in parallel, and they build the methods
+curriculum on top of the R-side mechanics you now have.
 
 Good luck with the program.

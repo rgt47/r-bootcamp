@@ -9,7 +9,7 @@ By the end of this day you should be able to:
 - Choose the right geom for the data (`geom_point`,
   `geom_line`, `geom_bar`, `geom_histogram`,
   `geom_boxplot`).
-- Customise scales, labels, and themes.
+- Customize scales, labels, and themes.
 - Use `facet_wrap` to produce small multiples.
 - Save figures as PNG and PDF at appropriate dimensions
   and resolution.
@@ -17,10 +17,10 @@ By the end of this day you should be able to:
 ## Lecture
 
 `ggplot2` is the standard graphics package for the R
-ecosystem. It is built on the **grammar of graphics**: a
+ecosystem. It rests on the **grammar of graphics**, a
 deliberate vocabulary that lets you compose any figure
 from a small number of orthogonal pieces. Once you know
-the grammar, every plot is a recombination.
+the grammar, every plot is essentially a recombination.
 
 ### The grammar in one paragraph
 
@@ -133,9 +133,10 @@ ggplot(cohort, aes(x = age, y = sbp, colour = sex)) +
   geom_point()
 ```
 
-When you see strange figures (a single hue ramp where
-you expected discrete colors, an alpha legend you did
-not ask for), it is usually `aes()`-vs.-not confusion.
+When a figure looks strange, a single hue ramp where you
+expected discrete colors, or an alpha legend you did not
+ask for, the cause is usually this `aes()`-versus-fixed-
+value confusion.
 
 ### Scales
 
@@ -206,9 +207,10 @@ ggsave("figures/sbp-by-age.png", p, width = 6, height = 4,
 ggsave("figures/sbp-by-age.pdf", p, width = 6, height = 4)
 ```
 
-PNG for screen and most slides; PDF for print and
-publication. The `dpi = 300` for PNG keeps the figure
-crisp at print size; PDF is vector and has no dpi.
+PNG suits the screen and most slides; PDF suits print and
+publication. The `dpi = 300` argument for PNG keeps the
+figure crisp at print size. PDF is a vector format and has
+no dpi to set.
 
 ::: {.callout-note}
 A figure for a journal article typically wants a
@@ -260,8 +262,9 @@ ggsave("figures/glucose-box.png", p3, width = 6, height = 4,
        dpi = 300)
 ```
 
-These three figures together would make a respectable
-'descriptive figures' panel in a journal article.
+Taken together, these three figures would make a
+respectable 'descriptive figures' panel in a journal
+article.
 
 ## Homework
 
@@ -269,7 +272,7 @@ These three figures together would make a respectable
    specifications below, produce the figure from
    yesterday's `cohort` dataset.
 
-   (a) Histogram of `bmi` with bin width 1 and the title
+   (a) A histogram of `bmi` with bin width 1 and the title
        'BMI distribution'.
 
    (b) Scatter of `fasting_glucose` (y) vs. `bmi` (x),
@@ -286,7 +289,7 @@ These three figures together would make a respectable
    figures, side by side or sequential). When does the
    log scale change what you see? When does it not?
 
-3. **Journal theme.** Customise figure 1(b) with a
+3. **Journal theme.** Customize figure 1(b) with a
    journal-style theme: white background, grid only on
    the y-axis, larger axis font, a specified color
    palette (e.g., `scale_color_manual(values = c("FALSE"
@@ -347,10 +350,10 @@ cohort |>
 y-values as-is rather than counting).
 
 **Problem 2.** The log scale changes what you see when
-the underlying distribution is right-skewed (typical for
-fasting glucose and most lab values). The log axis
-linearizes a multiplicative relationship; differences at
-the high end appear less compressed.
+the underlying distribution is right-skewed, which is
+typical for fasting glucose and most lab values. The log
+axis linearizes a multiplicative relationship, so
+differences at the high end appear less compressed.
 
 **Problem 3.**
 
@@ -385,10 +388,10 @@ ggplot(cohort, aes(x = bmi, y = sbp)) +
   theme_minimal()
 ```
 
-The relationship between BMI and SBP is positive in
-every age group; the slope appears similar across
-groups but the intercept is higher in the older group
-(because SBP rises with age independent of BMI).
+The relationship between BMI and SBP is positive in every
+age group. The slope appears similar across groups, but
+the intercept is higher in the older group, since SBP
+rises with age independent of BMI.
 
 **Problem 5.**
 
