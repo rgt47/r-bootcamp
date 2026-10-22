@@ -6,8 +6,7 @@ version: 0.1.0
 date-released: "2026-07-31"
 license: GPL-3
 authors:
-  - family-names: Thomas
-    given-names: Ronald G.
+  - name: "rgtlab curriculum team"
     orcid: ""
     email: rgthomas@ucsd.edu
     affiliation: Your Institution
