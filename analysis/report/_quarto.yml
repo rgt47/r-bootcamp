@@ -4,6 +4,19 @@ project:
   type: book
   output-dir: _book
 
+# DRAFT: delete this block at release. Quarto reads the banner only
+# from website:, and a book project does not copy it over from book:.
+website:
+  announcement:
+    icon: info-circle
+    dismissable: true
+    content: >-
+      **Draft.** This book is under active development, and
+      chapters may change. Please use 'Report an issue' to flag
+      problems.
+    type: warning
+    position: below-navbar
+
 book:
   title: 'R for Biostatistics'
   subtitle: 'A One-Week Boot Camp for incoming graduate students'
@@ -89,6 +102,9 @@ format:
       text: |
         \usepackage{fontspec}
         \setmonofont{DejaVu Sans Mono}[Scale=0.9]
+        % DRAFT: delete this line, and the matching footer block,
+        % at release.
+        \usepackage{eso-pic}
     include-before-body:
       text: |
         \begin{titlepage}
@@ -100,6 +116,13 @@ format:
         \restoregeometry
         \end{titlepage}
         \cleardoublepage
+        % DRAFT: delete at release. eso-pic draws on every page from
+        % here on, whatever the page style, so the KOMA headers and
+        % page numbers are untouched and the cover stays clean.
+        \AddToShipoutPictureFG{%
+          \AtPageLowerLeft{\makebox[\paperwidth]{\raisebox{0.15in}{%
+            \footnotesize\sffamily\color{gray}%
+            Draft, \today. Content may change.}}}}
 
 bibliography: references.bib
 csl: https://www.zotero.org/styles/apa

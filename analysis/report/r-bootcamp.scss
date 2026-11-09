@@ -41,6 +41,12 @@ img.cover {
 
 /* navigation toggle: floating button hides both nav panels */
 
+// The draft banner's dismiss button would sit under the fixed
+// toggle below; padding moves it clear. Harmless without a banner.
+#quarto-announcement {
+  padding-right: 3.5rem;
+}
+
 #nav-toggle-bar {
   position: fixed;
   top: 0.5rem;
