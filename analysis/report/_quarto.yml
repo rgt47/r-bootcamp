@@ -1,6 +1,7 @@
 project:
   pre-render:
     - ../../tools/us-spelling
+    - ../../tools/make-contents.py
   type: book
   output-dir: _book
 
@@ -43,6 +44,7 @@ book:
     - half-title.qmd
     - copyright.qmd
     - index.qmd
+    - contents.qmd
     - preface.qmd
     - conventions.qmd
     - 00-intro.qmd
