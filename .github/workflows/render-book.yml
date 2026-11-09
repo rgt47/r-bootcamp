@@ -34,6 +34,10 @@ jobs:
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
+        # Pinned: CI builds with 1.11.9 omitted the draft banner
+        # (website announcement); 1.10.18 matches local builds.
+        with:
+          version: '1.10.18'
 
       - name: Detect backend and engine
         id: mode
