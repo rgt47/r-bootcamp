@@ -1,14 +1,15 @@
 # Copyright {.unnumbered}
 
 *R for Biostatistics: A One-Week Boot Camp* by rgtlab curriculum team is licensed under a
-[Creative Commons Attribution-NonCommercial-NoDerivatives
+[Creative Commons Attribution
 4.0 International
-License](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+License](https://creativecommons.org/licenses/by/4.0/).
 
-The code samples in this book are licensed under
-[Creative Commons CC0 1.0 Universal (CC0
-1.0)](https://creativecommons.org/publicdomain/zero/1.0/),
-i.e. the public domain.
+The code samples printed in this book are licensed under the
+[MIT License](https://opensource.org/license/mit). The
+repository code (package functions and build scripts) is
+licensed under
+[GPL-3](https://www.gnu.org/licenses/gpl-3.0.html).
 
 To cite this book, please use:
 

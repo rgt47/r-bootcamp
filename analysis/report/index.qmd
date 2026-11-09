@@ -42,9 +42,11 @@ cues.
 
 This book is licensed under
 [Creative Commons
-Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/).
+Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/).
 
-Code samples are licensed under
-[Creative Commons CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/),
-i.e. public domain.
+The code samples printed in this book are licensed under the
+[MIT License](https://opensource.org/license/mit). The
+repository code (package functions and build scripts) is
+licensed under
+[GPL-3](https://www.gnu.org/licenses/gpl-3.0.html).
 

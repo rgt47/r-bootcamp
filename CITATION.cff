@@ -4,7 +4,10 @@ type: software
 title: "rbootcamp"
 version: 0.1.0
 date-released: "2026-07-31"
-license: GPL-3
+license:
+  - CC-BY-4.0
+  - MIT
+  - GPL-3.0-only
 authors:
   - name: "rgtlab curriculum team"
     orcid: ""
@@ -14,6 +17,9 @@ abstract: >
   Reproducible research compendium created with zzcollab v0.3.0.
   Contains all data, code, and computational environment needed to reproduce
   the analyses.
+  The prose, figures, and exercises are licensed CC BY 4.0; code
+  printed in the book is MIT; the repository code is GPL-3. See
+  LICENSE.
 keywords:
   - reproducible-research
   - research-compendium
