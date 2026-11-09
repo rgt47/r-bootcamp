@@ -25,6 +25,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Write access lets the job publish the PDF to the 'Latest PDF' release.
+permissions:
+  contents: write
+
 jobs:
   render-book:
     runs-on: ubuntu-latest
@@ -89,9 +93,18 @@ jobs:
         if: steps.mode.outputs.backend == 'host' && steps.mode.outputs.python == 'true'
         run: pip install jupyter
 
+      # TeX for the PDF edition; Quarto installs any missing LaTeX
+      # packages on demand during the render.
+      - name: Install TinyTeX (host)
+        if: steps.mode.outputs.backend == 'host'
+        run: quarto install tinytex --no-prompt
+
+      # One render for all formats: separate --to html and --to pdf
+      # runs each clear _book, and Quarto adds the sidebar 'Download
+      # PDF' link only when it builds the PDF in the same run.
       - name: Render book (host)
         if: steps.mode.outputs.backend == 'host'
-        run: quarto render analysis/report --to html
+        run: quarto render analysis/report
 
       # --- Container backend: build the project image and render inside it ---
       - name: Set up Buildx
@@ -133,3 +146,23 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         timeout-minutes: 5
+
+      # One rolling release holds the current PDF, so the download
+      # link on the repository page never changes.
+      - name: Publish PDF to the 'Latest PDF' release
+        if: >-
+          github.event_name == 'push' && github.ref == 'refs/heads/main'
+          && steps.mode.outputs.backend == 'host'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pdf=$(ls analysis/report/_book/*.pdf 2>/dev/null | head -1)
+          if [ -z "$pdf" ]; then echo "No PDF was built"; exit 1; fi
+          repo="$GITHUB_REPOSITORY"
+          if ! gh release view latest-pdf --repo "$repo" >/dev/null 2>&1; then
+            gh release create latest-pdf --repo "$repo" --target main \
+              --title 'Latest PDF' --prerelease --notes 'Created by CI.'
+          fi
+          gh release upload latest-pdf "$pdf" --repo "$repo" --clobber
+          gh release edit latest-pdf --repo "$repo" --notes \
+            "Draft PDF built from ${GITHUB_SHA::7} on $(date -u +%Y-%m-%d). The same file is served at the book's website."
